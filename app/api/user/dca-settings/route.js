@@ -4,6 +4,28 @@ import { connectToDB } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 
+// Hilfsfunktion, um das nächste Ausführungsdatum basierend auf dem Intervall zu berechnen
+function getNextExecutionDate(interval) {
+  const today = new Date();
+  let nextDate = new Date(today);
+
+  switch (interval) {
+    case "daily":
+      nextDate.setDate(today.getDate() + 1);
+      break;
+    case "weekly":
+      nextDate.setDate(today.getDate() + 7);
+      break;
+    case "monthly":
+      nextDate.setMonth(today.getMonth() + 1);
+      break;
+    default:
+      nextDate.setDate(today.getDate() + 7); // Standardmäßig eine Woche
+  }
+
+  return nextDate;
+}
+
 // Endpoint zum Speichern der DCA-Einstellungen
 export async function POST(req) {
   try {
@@ -66,6 +88,10 @@ export async function POST(req) {
 
     console.log("Benutzer gefunden:", user._id);
 
+    // Berechne das nächste Ausführungsdatum
+    const nextExecutionDate = getNextExecutionDate(interval);
+    console.log("Nächstes Ausführungsdatum:", nextExecutionDate);
+
     // DCA-Einstellungen für den User speichern
     const result = await db.collection("users").updateOne(
       { _id: user._id },
@@ -74,6 +100,8 @@ export async function POST(req) {
           dcaSettings: {
             interval,
             amount: parseFloat(amount),
+            nextExecutionDate: nextExecutionDate,
+            status: "scheduled",
             updatedAt: new Date(),
           },
         },
@@ -138,6 +166,8 @@ export async function GET(req) {
     const dcaSettings = user.dcaSettings || {
       interval: "weekly",
       amount: 100,
+      nextExecutionDate: getNextExecutionDate("weekly"),
+      status: "scheduled",
     };
 
     return NextResponse.json(dcaSettings);

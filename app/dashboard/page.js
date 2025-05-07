@@ -7,6 +7,7 @@ import ApiKeyForm from "@/components/ApiKeyForm";
 import DcaSettingsForm from "@/components/DcaSettingsForm";
 import KrakenBalance from "@/components/KrakenBalance";
 import ResetApiKeyButton from "@/components/ResetApiKeyButton";
+import TransactionHistory from "@/components/TransactionHistory";
 import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
@@ -41,6 +42,35 @@ export default async function Dashboard() {
   const hasApiKeys = user?.krakenApiKeys?.public && user?.krakenApiKeys?.secret;
   // Falls DCA-Einstellungen vorhanden sind, diese übernehmen, sonst Standardwerte
   const dcaSettings = user?.dcaSettings || { interval: "weekly", amount: 100 };
+
+  // Transaktionen und Einsparungen abrufen
+  let transactions = [];
+  let totalSavings = 0;
+  let lastTransaction = null;
+
+  if (hasApiKeys) {
+    try {
+      transactions = await db
+        .collection("transactions")
+        .find({
+          userId: user._id,
+          status: "completed",
+        })
+        .sort({ createdAt: -1 })
+        .toArray();
+
+      totalSavings = transactions.reduce(
+        (sum, tx) => sum + (tx.standardFee - tx.actualFee),
+        0
+      );
+
+      if (transactions.length > 0) {
+        lastTransaction = transactions[0];
+      }
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Transaktionen:", error);
+    }
+  }
 
   return (
     <main className="min-h-screen p-8 pb-24 bg-base-100">
@@ -106,7 +136,7 @@ export default async function Dashboard() {
                   API Keys. Diese werden sicher in unserer Datenbank gespeichert
                   und nur für die Durchführung Ihrer Bitcoin-Käufe verwendet.
                 </p>
-                <div className="alert alert-warning my-4">
+                <div className="alert alert-  warning my-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="stroke-current shrink-0 h-6 w-6"
@@ -157,7 +187,11 @@ export default async function Dashboard() {
                 Basierend auf Ihren DCA-Einstellungen wird der nächste Kauf
                 automatisch durchgeführt.
               </p>
-              <div className="overflow-x-auto">
+
+              <div className="divider"></div>
+
+              {/* Nächste geplante Käufe */}
+              <div className="overflow-x-auto mb-6">
                 <table className="table w-full">
                   <thead>
                     <tr>
@@ -168,14 +202,34 @@ export default async function Dashboard() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{getNextExecutionDate(dcaSettings.interval)}</td>
+                      <td>
+                        {dcaSettings.nextExecutionDate
+                          ? new Date(
+                              dcaSettings.nextExecutionDate
+                            ).toLocaleDateString("de-DE")
+                          : getNextExecutionDate(dcaSettings.interval)}
+                      </td>
                       <td>€{dcaSettings.amount.toFixed(2)}</td>
                       <td>
-                        <span className="badge badge-primary">Geplant</span>
+                        <span
+                          className={`badge ${getStatusBadgeClass(
+                            dcaSettings.status
+                          )}`}
+                        >
+                          {translateStatus(dcaSettings.status || "scheduled")}
+                        </span>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Transaktionshistorie */}
+              <h3 className="text-xl font-semibold mt-6">
+                Durchgeführte Käufe
+              </h3>
+              <div className="mt-2">
+                <TransactionHistory userId={userIdStr} />
               </div>
             </div>
           </div>
@@ -193,13 +247,31 @@ export default async function Dashboard() {
               <div className="stats shadow mt-4">
                 <div className="stat">
                   <div className="stat-title">Insgesamt gespart</div>
-                  <div className="stat-value">€0.00</div>
+                  <div className="stat-value">
+                    {new Intl.NumberFormat("de-DE", {
+                      style: "currency",
+                      currency: "EUR",
+                    }).format(totalSavings)}
+                  </div>
                   <div className="stat-desc">Seit Aktivierung</div>
                 </div>
                 <div className="stat">
                   <div className="stat-title">Letzte Transaktion</div>
-                  <div className="stat-value">-</div>
-                  <div className="stat-desc">Noch keine Transaktionen</div>
+                  <div className="stat-value">
+                    {lastTransaction
+                      ? new Intl.DateTimeFormat("de-DE").format(
+                          new Date(lastTransaction.createdAt)
+                        )
+                      : "-"}
+                  </div>
+                  <div className="stat-desc">
+                    {lastTransaction
+                      ? `${new Intl.NumberFormat("de-DE", {
+                          style: "currency",
+                          currency: "EUR",
+                        }).format(lastTransaction.eurAmount)} gekauft`
+                      : "Noch keine Transaktionen"}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -230,6 +302,7 @@ export default async function Dashboard() {
 }
 
 // Hilfsfunktion, um das nächste Ausführungsdatum basierend auf dem Intervall zu berechnen
+// Diese Funktion wird nur noch als Fallback verwendet, wenn kein nextExecutionDate in der Datenbank gespeichert ist
 function getNextExecutionDate(interval) {
   const today = new Date();
   let nextDate = new Date(today);
@@ -250,4 +323,36 @@ function getNextExecutionDate(interval) {
 
   // Formatiere das Datum als DD.MM.YYYY
   return nextDate.toLocaleDateString("de-DE");
+}
+
+// Hilfsfunktion, um den Status in eine deutsche Bezeichnung zu übersetzen
+function translateStatus(status) {
+  switch (status) {
+    case "scheduled":
+      return "Geplant";
+    case "processing":
+      return "Wird ausgeführt";
+    case "completed":
+      return "Abgeschlossen";
+    case "failed":
+      return "Fehlgeschlagen";
+    default:
+      return "Geplant";
+  }
+}
+
+// Hilfsfunktion, um die CSS-Klasse für den Status-Badge zu ermitteln
+function getStatusBadgeClass(status) {
+  switch (status) {
+    case "scheduled":
+      return "badge-primary";
+    case "processing":
+      return "badge-warning";
+    case "completed":
+      return "badge-success";
+    case "failed":
+      return "badge-error";
+    default:
+      return "badge-primary";
+  }
 }
