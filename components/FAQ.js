@@ -7,22 +7,48 @@ import { useRef, useState } from "react";
 
 const faqList = [
   {
-    question: "What do I get exactly?",
-    answer: <div className="space-y-2 leading-relaxed">Loreum Ipseum</div>,
+    question: "Why should I use this platform over Kraken?",
+    answer: (
+      <div className="space-y-2 leading-relaxed">
+        Our platform offers up to 10x lower fees, automated BTC purchases, and
+        no hidden spreads, making it ideal for long-term Bitcoin accumulation.
+      </div>
+    ),
   },
   {
-    question: "Can I get a refund?",
+    question: "How much can I save on fees?",
     answer: (
       <p>
-        Yes! You can request a refund within 7 days of your purchase. Reach out
-        by email.
+        By using our platform, you can save up to 90% in fees compared to the
+        standard Kraken app, thanks to our low-cost exchange APIs.
       </p>
     ),
   },
   {
-    question: "I have another question",
+    question: "Is my data secure on this platform?",
     answer: (
-      <div className="space-y-2 leading-relaxed">Cool, contact us by email</div>
+      <div className="space-y-2 leading-relaxed">
+        Yes, we prioritize security by ensuring safe transactions and secure
+        handling of your API keys, with optional transaction limits.
+      </div>
+    ),
+  },
+  {
+    question: "What is Dollar-Cost Averaging (DCA)?",
+    answer: (
+      <p>
+        DCA is an investment strategy where you invest a fixed amount of money
+        at regular intervals, reducing the impact of market volatility.
+      </p>
+    ),
+  },
+  {
+    question: "How do I get started?",
+    answer: (
+      <div className="space-y-2 leading-relaxed">
+        Simply sign up, integrate your Kraken API keys, and start automating
+        your Bitcoin purchases with our easy-to-use interface.
+      </div>
     ),
   },
 ];

@@ -12,8 +12,17 @@ const Pricing = () => {
         <div className="flex flex-col text-center w-full mb-20">
           <p className="font-medium text-primary mb-8">Pricing</p>
           <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
-            Save hours of repetitive code and ship faster!
+            Save up to 90% on fees with our platform
           </h2>
+          <p className="text-base-content/80 mt-4">
+            Our platform adds only a 0.1% service fee on top of Kraken
+            Pro&apos;s fees, making it ideal for monthly investments starting
+            from $50.
+          </p>
+          <p className="text-base-content/80 mt-2">
+            Compare this to Kraken&apos;s standard app, where fees can reach up
+            to 2% per transaction.
+          </p>
         </div>
 
         <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">

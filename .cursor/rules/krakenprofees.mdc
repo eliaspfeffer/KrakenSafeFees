@@ -1,0 +1,27 @@
+---
+description: Is helpful to understand our cost and pricing structure
+globs: 
+---
+# Kraken Pro Taker Fees (with +0.1% Platform Fee)
+
+- Applies when users place a market order (i.e., buy/sell instantly).
+- We use Kraken Pro’s fee schedule and **add a 0.1% service fee on top**.
+- Based on 30-day USD trading volume:
+
+| 30-Day Volume (USD)         | Kraken Taker Fee | Final Fee (with +0.1%) |
+|----------------------------|------------------|-------------------------|
+| $0 – $10,000               | 0.40 %           | 0.50 %                  |
+| $10,000 – $50,000          | 0.35 %           | 0.45 %                  |
+| $50,000 – $100,000         | 0.24 %           | 0.34 %                  |
+| $100,000 – $250,000        | 0.22 %           | 0.32 %                  |
+| $250,000 – $500,000        | 0.20 %           | 0.30 %                  |
+| $500,000 – $1,000,000      | 0.18 %           | 0.28 %                  |
+| $1,000,000 – $2,500,000    | 0.16 %           | 0.26 %                  |
+| $2,500,000 – $5,000,000    | 0.14 %           | 0.24 %                  |
+| $5,000,000 – $10,000,000   | 0.12 %           | 0.22 %                  |
+| Over $10,000,000           | 0.10 %           | 0.20 %                  |
+
+- Source: [Kraken Fee Schedule](mdc:https:/www.kraken.com/features/fee-schedule?utm_source=chatgpt.com)
+- Note: The added 0.1% funds development and operation of our automated DCA service.
+- You can @ this in `taker_fee_config.ts` or `fee_model.md`
+- You can use markdown but don't have to

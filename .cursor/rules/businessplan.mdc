@@ -1,0 +1,37 @@
+---
+description: This is helpful to understand the benefits of using our website
+globs: 
+---
+# DCA Customer Rule: Why Our Platform Outperforms Kraken
+
+- Customers using the standard Kraken app for recurring BTC purchases pay approx. **1.5% instant fee** + **~0.5–1% spread**, totaling up to **2% per transaction**.
+- Our platform offers **automated BTC purchases** via Kraken Pro or other low-cost exchange APIs with **fees as low as 0.2–0.4%**.
+- Instead of manually executing DCA (Dollar-Cost Averaging), users can **automate daily, weekly, or monthly BTC buys**.
+- **No hidden spreads** – our platform uses **live market prices** from the order book.
+- We provide **secure API key management**, with optional time-based or volume-based transaction limits.
+- Compared to Kraken’s standard app, users save up to **90% in fees** over time.
+- **Target users**: Bitcoin savers investing €50–500 per month who want to optimize costs.
+- **Revenue model**:
+  - Transparent low service fee (0.1–0.2%) vs. Kraken’s ~2%
+  - Freemium: first 3 months free, then subscription or volume-based pricing
+  - Affiliate: e.g., for hardware wallets or exchange referrals
+- **Unique Selling Points (USPs)**:
+  - Up to **10× cheaper** than standard Kraken app
+  - Fully automated
+  - No hidden spreads
+  - Transparent API-based trades
+  - Ideal for long-term BTC accumulation
+- **Planned Features / Roadmap**:
+  - Support for other exchanges: Bitstamp, Binance, Relai
+  - Lightning DCA: immediate off-chain BTC payout
+  - Auto-withdrawal to wallet once threshold is reached
+- **For Cursor implementation**:
+  - Exchange API integration (e.g., Kraken Pro via OAuth or key-based)
+  - Task scheduler for automated buy intervals
+  - Savings comparison view for onboarding
+  - Wallet management with optional auto-payout
+  - Backend with transaction logs and fee accounting
+  - Strong focus on security & API key encryption
+
+- You can @ files here like `kraken_dca_logic.js`, `auto_scheduler.py`, or `user_wallet_manager.ts`
+- You can use markdown but don't have to

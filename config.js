@@ -2,12 +2,12 @@ import themes from "daisyui/src/theming/themes";
 
 const config = {
   // REQUIRED
-  appName: "ShipFast",
+  appName: "SafeKrakenFees",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
-    "The NextJS boilerplate with all you need to build your SaaS, AI tool, or any other web app.",
+    "Save up to 90% on Bitcoin purchase fees with automated DCA strategies. Buy BTC smarter with SafeKrakenFees.",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
-  domainName: "shipfa.st",
+  domainName: "safekrakenfees.com",
   crisp: {
     // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (resend.supportEmail) otherwise customer support won't work.
     id: "",
@@ -26,18 +26,19 @@ const config = {
         //  REQUIRED - Name of the plan, displayed on the pricing page
         name: "Starter",
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
-        description: "Perfect for small projects",
+        description: "Perfect for monthly Bitcoin investments under €500",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 79,
+        price: 1,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 99,
+        priceAnchor: 15,
         features: [
           {
-            name: "NextJS boilerplate",
+            name: "Save up to 90% on Kraken fees",
           },
-          { name: "User oauth" },
-          { name: "Database" },
-          { name: "Emails" },
+          { name: "Weekly automated DCA purchases" },
+          { name: "Real-time market prices without spreads" },
+          { name: "Secure API key management" },
+          { name: "First 3 months free" },
         ],
       },
       {
@@ -47,19 +48,18 @@ const config = {
           process.env.NODE_ENV === "development"
             ? "price_1O5KtcAxyNprDp7iftKnrrpw"
             : "price_456",
-        name: "Advanced",
-        description: "You need more power",
-        price: 99,
-        priceAnchor: 149,
+        name: "Pro",
+        description: "Perfect for recurring Bitcoin investments above €500",
+        price: 5,
+        priceAnchor: 25,
         features: [
-          {
-            name: "NextJS boilerplate",
-          },
-          { name: "User oauth" },
-          { name: "Database" },
-          { name: "Emails" },
-          { name: "1 year of updates" },
-          { name: "24/7 support" },
+          { name: "Save up to 90% on Kraken fees" },
+          { name: "Daily, weekly or custom DCA intervals" },
+          { name: "Customizable Spend-Everything-Until Date" },
+          { name: "Real-time market prices without spreads" },
+          { name: "Enhanced security with time/volume limits" },
+          { name: "Fee savings dashboard and analytics" },
+          { name: "Priority support" },
         ],
       },
     ],
@@ -72,17 +72,17 @@ const config = {
   },
   resend: {
     // REQUIRED — Email 'From' field to be used when sending magic login links
-    fromNoReply: `ShipFast <noreply@resend.shipfa.st>`,
+    fromNoReply: `SafeKrakenFees <noreply@safekrakenfees.com>`,
     // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
-    fromAdmin: `Marc at ShipFast <marc@resend.shipfa.st>`,
+    fromAdmin: `Support at SafeKrakenFees <support@safekrakenfees.com>`,
     // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
-    supportEmail: "marc.louvion@gmail.com",
+    supportEmail: "support@safekrakenfees.com",
   },
   colors: {
     // REQUIRED — The DaisyUI theme to use (added to the main layout.js). Leave blank for default (light & dark mode). If you any other theme than light/dark, you need to add it in config.tailwind.js in daisyui.themes.
     theme: "light",
     // REQUIRED — This color will be reflected on the whole app outside of the document (loading bar, Chrome tabs, etc..). By default it takes the primary color from your DaisyUI theme (make sure to update your the theme name after "data-theme=")
-    // OR you can just do this to use a custom color: main: "#f37055". HEX only.
+    // OR you can just do this to use a custom color: main: "#5741d9". HEX only.
     main: themes["light"]["primary"],
   },
   auth: {

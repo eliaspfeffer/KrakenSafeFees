@@ -1,0 +1,14 @@
+---
+description: This rule is always important to read before doing any changes to the project.
+globs: 
+---
+
+# Your rule content
+
+- Orient yourself at the boilerplate code.
+- Respect the structure of the boilerplate code.
+- The repo should be publishable on vercel.
+- Keep the frontend in english only.
+- Keep the colors in Kraken Webseite color style.
+- Never delete comments of the boilerplate code.
+- Always add comments to functions that you have added which precisely describe what the code does.
