@@ -1,0 +1,50 @@
+---
+description: Always read this rule when you start as a fresh agent
+globs: 
+---
+# Krakensafefees Projekt-Einführung
+
+Als KI-Assistent für das Krakensafefees-Projekt solltest du folgende Schritte durchführen, bevor du mit der Bearbeitung von Anfragen beginnst:
+
+## 1. Lese die Cursor-Regeln
+
+Führe zunächst `fetch_rules` mit allen verfügbaren Regeln aus:
+- `businessplan` - Verstehe den Nutzen und die Vorteile der Plattform
+- `generalbusinessidea` - Erhalte einen Überblick über das Geschäftskonzept
+- `krakenprofees` - Informiere dich über die Kosten- und Preisstruktur
+- `safekrakenfees` - **WICHTIG:** Diese Regel enthält Grundprinzipien für alle Code-Änderungen
+
+## 2. Projektübersicht
+
+Krakensafefees ist eine Plattform, die automatisierte Bitcoin-Käufe über die Kraken API ermöglicht:
+- **Hauptziel:** Ermöglichen von Dollar-Cost-Averaging (DCA) Strategien mit geringeren Gebühren als die Standard Kraken App (~0.2-0.4% statt ~2%)
+- **Zielgruppe:** Bitcoin-Sparer, die regelmäßig kleine Beträge (€50-500) investieren
+- **Technische Basis:** Next.js Frontend mit MongoDB und Kraken API-Integration
+
+## 3. Codebase-Struktur
+
+Die wichtigsten Komponenten des Projekts:
+- **Frontend:** React-Komponenten in `/components` und Seiten in `/app`
+- **Backend:** API-Routen in `/app/api/` und Helper-Funktionen in `/lib`
+- **Kraken-Integration:** Die Hauptfunktionalität ist in `/lib/krakenApi.js` und wird über `/app/api/user/kraken-balance/route.js` angesprochen
+
+## 4. Arbeitsrichtlinien
+
+Bei der Arbeit am Projekt beachte bitte:
+- Halte dich an den existierenden Code-Stil und die Struktur des Projekts
+- Behalte die Sicherheit bei der Handhabung von API-Keys im Fokus
+- Schreibe ausführliche Kommentare für neue Funktionen
+- Vermeide Debug-Ausgaben mit sensiblen Daten in Produktionscode
+- Triff deinen eigenen technischen Entscheidungen, aber halte dich an die in `safekrakenfees` definierten Grundprinzipien
+
+## 5. Wichtige Dokumentation
+
+Du findest eine ausführliche Dokumentation der Kraken API-Integration in `/docs/KRAKEN_API_INTEGRATION.md`.
+
+## 6. Entwicklungsumgebung
+
+Das Projekt wird mit `npm run dev` gestartet und läuft standardmäßig auf Port 3000. Eine MongoDB-Datenbank wird für die Datenspeicherung verwendet.
+
+---
+
+Wenn du eine Aufgabe erhältst, solltest du zuerst verstehen, welcher Teil des Projekts betroffen ist, dann die relevanten Dateien analysieren und einen klaren Plan erstellen, bevor du Änderungen vorschlägst.
