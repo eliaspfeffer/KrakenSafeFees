@@ -9,6 +9,7 @@ import KrakenBalance from "@/components/KrakenBalance";
 import ResetApiKeyButton from "@/components/ResetApiKeyButton";
 import TransactionHistory from "@/components/TransactionHistory";
 import { ObjectId } from "mongodb";
+import ExecuteDcaTestButton from "@/components/ExecuteDcaTestButton";
 
 export const dynamic = "force-dynamic";
 
@@ -121,6 +122,17 @@ export default async function Dashboard() {
                   userId={userIdStr}
                   initialSettings={dcaSettings}
                 />
+
+                {/* Test-Button für manuelle DCA-Ausführung */}
+                <div className="mt-6 border-t pt-4">
+                  <h4 className="font-semibold mb-2">DCA-Ausführung testen</h4>
+                  <p className="text-sm mb-3">
+                    Mit diesem Button können Sie manuell eine Ausführung des
+                    DCA-Prozesses starten, um Ihre Einstellungen zu testen. Es
+                    werden nur fällige Aufträge ausgeführt.
+                  </p>
+                  <ExecuteDcaTestButton userId={userIdStr} />
+                </div>
 
                 <div className="card-actions justify-end">
                   <ResetApiKeyButton userId={userIdStr} />
