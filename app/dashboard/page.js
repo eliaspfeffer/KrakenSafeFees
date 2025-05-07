@@ -4,6 +4,9 @@ import { authOptions } from "@/libs/next-auth";
 import { connectToDB } from "@/lib/db";
 import { redirect } from "next/navigation";
 import ApiKeyForm from "@/components/ApiKeyForm";
+import DcaSettingsForm from "@/components/DcaSettingsForm";
+import KrakenBalance from "@/components/KrakenBalance";
+import ResetApiKeyButton from "@/components/ResetApiKeyButton";
 import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +39,8 @@ export default async function Dashboard() {
   console.log("Dashboard - Found User:", user ? user._id.toString() : null);
 
   const hasApiKeys = user?.krakenApiKeys?.public && user?.krakenApiKeys?.secret;
+  // Falls DCA-Einstellungen vorhanden sind, diese übernehmen, sonst Standardwerte
+  const dcaSettings = user?.dcaSettings || { interval: "weekly", amount: 100 };
 
   return (
     <main className="min-h-screen p-8 pb-24 bg-base-100">
@@ -44,6 +49,8 @@ export default async function Dashboard() {
           <h1 className="text-3xl md:text-4xl font-extrabold">Dashboard</h1>
           <ButtonAccount />
         </div>
+
+        {hasApiKeys && <KrakenBalance userId={userIdStr} />}
 
         <div className="card bg-base-200 shadow-xl">
           <div className="card-body">
@@ -80,33 +87,13 @@ export default async function Dashboard() {
                   </span>
                 </div>
                 <h3 className="font-bold text-lg">Ihre DCA-Einstellungen</h3>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">DCA-Intervall</span>
-                  </label>
-                  <select className="select select-bordered">
-                    <option>Täglich</option>
-                    <option selected>Wöchentlich</option>
-                    <option>Monatlich</option>
-                  </select>
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Kaufbetrag (EUR)</span>
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="100"
-                    className="input input-bordered w-full max-w-xs"
-                  />
-                </div>
+                <DcaSettingsForm
+                  userId={userIdStr}
+                  initialSettings={dcaSettings}
+                />
+
                 <div className="card-actions justify-end">
-                  <button className="btn btn-primary">
-                    Einstellungen speichern
-                  </button>
-                  <button className="btn btn-outline btn-error">
-                    API Keys zurücksetzen
-                  </button>
+                  <ResetApiKeyButton userId={userIdStr} />
                 </div>
               </div>
             ) : (
@@ -162,6 +149,38 @@ export default async function Dashboard() {
           </div>
         </div>
 
+        {hasApiKeys && (
+          <div className="card bg-base-200 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title text-2xl">Nächste geplante Käufe</h2>
+              <p className="my-2">
+                Basierend auf Ihren DCA-Einstellungen wird der nächste Kauf
+                automatisch durchgeführt.
+              </p>
+              <div className="overflow-x-auto">
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th>Datum</th>
+                      <th>Betrag</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{getNextExecutionDate(dcaSettings.interval)}</td>
+                      <td>€{dcaSettings.amount.toFixed(2)}</td>
+                      <td>
+                        <span className="badge badge-primary">Geplant</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="card bg-base-200 shadow-xl">
           <div className="card-body">
             <h2 className="card-title text-2xl">Ihre Einsparungen</h2>
@@ -208,4 +227,27 @@ export default async function Dashboard() {
       </section>
     </main>
   );
+}
+
+// Hilfsfunktion, um das nächste Ausführungsdatum basierend auf dem Intervall zu berechnen
+function getNextExecutionDate(interval) {
+  const today = new Date();
+  let nextDate = new Date(today);
+
+  switch (interval) {
+    case "daily":
+      nextDate.setDate(today.getDate() + 1);
+      break;
+    case "weekly":
+      nextDate.setDate(today.getDate() + 7);
+      break;
+    case "monthly":
+      nextDate.setMonth(today.getMonth() + 1);
+      break;
+    default:
+      nextDate.setDate(today.getDate() + 7); // Standardmäßig eine Woche
+  }
+
+  // Formatiere das Datum als DD.MM.YYYY
+  return nextDate.toLocaleDateString("de-DE");
 }
