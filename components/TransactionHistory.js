@@ -131,7 +131,6 @@ export default function TransactionHistory({ userId }) {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      timeZoneName: "short",
     }).format(date);
   };
 
@@ -202,6 +201,15 @@ export default function TransactionHistory({ userId }) {
               Auto-Update aktiv
             </span>
           )}
+          <span className="ml-2">
+            (Alle Zeiten in{" "}
+            {
+              new Date()
+                .toLocaleTimeString("de-DE", { timeZoneName: "short" })
+                .split(" ")[1]
+            }
+            )
+          </span>
         </div>
       )}
 

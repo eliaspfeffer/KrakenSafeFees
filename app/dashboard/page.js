@@ -223,7 +223,6 @@ export default async function Dashboard() {
                               hour: "2-digit",
                               minute: "2-digit",
                               second: "2-digit",
-                              timeZoneName: "short",
                             }).format(new Date(dcaSettings.nextExecutionDate))
                           : getNextExecutionDate(dcaSettings.interval)}
                       </td>
@@ -248,6 +247,14 @@ export default async function Dashboard() {
               </h3>
               <div className="mt-2">
                 <TransactionHistory userId={userIdStr} />
+              </div>
+              <div className="text-xs text-gray-500 mt-2">
+                Alle Zeiten in{" "}
+                {
+                  new Date()
+                    .toLocaleTimeString("de-DE", { timeZoneName: "short" })
+                    .split(" ")[1]
+                }
               </div>
             </div>
           </div>
@@ -353,7 +360,6 @@ function getNextExecutionDate(interval) {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    timeZoneName: "short",
   }).format(nextDate);
 }
 

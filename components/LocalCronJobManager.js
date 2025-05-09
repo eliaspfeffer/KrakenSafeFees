@@ -15,6 +15,9 @@ export default function LocalCronJobManager() {
   const isProduction = process.env.NODE_ENV === "production";
   const isCronDisabled = process.env.DISABLE_LOCAL_CRON === "true";
 
+  // Konfigurierte Intervalle aus Umgebungsvariablen lesen
+  const cronInterval = parseInt(process.env.LOCAL_CRON_INTERVAL || "600000"); // Standard: 10 Minuten
+
   // Initialisieren und Aufräumen des Cron-Managers
   useEffect(() => {
     // Wenn Cron-Jobs deaktiviert sind, nichts tun
@@ -36,8 +39,10 @@ export default function LocalCronJobManager() {
   // Update des nächsten Check-Zeitpunkts (für Debug-Anzeige)
   const updateNextCheckTime = () => {
     const now = new Date();
-    // Nächster Test in 1 Minute für Entwicklung, 10 Minuten für Produktion
-    const nextInterval = isProduction ? 10 * 60 * 1000 : 60 * 1000;
+    // Verwende das konfigurierte Intervall
+    const nextInterval = isProduction
+      ? cronInterval
+      : parseInt(process.env.LOCAL_CRON_TEST_INTERVAL || "60000");
     const next = new Date(now.getTime() + nextInterval);
     setNextCheck(next);
 
