@@ -68,22 +68,38 @@ export async function GET(req) {
  */
 async function executeDCAOrders(req) {
   try {
-    // Überprüfung, ob der Request vom Vercel Cron kommt
-    // Bei Vercel-Cron-Jobs wird ein spezieller Authorization-Header gesetzt
+    // Überprüfung, ob der Request autorisiert ist
     const authHeader = req.headers.get("Authorization");
+    const localCronSecret =
+      process.env.LOCAL_CRON_SECRET || "local-development";
 
     // In der Produktionsumgebung sollte ein gültiger Secret Token gesetzt sein
     if (process.env.NODE_ENV === "production") {
-      // Überprüfen des Authorization-Headers
-      if (!authHeader || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      // Überprüfen des Authorization-Headers - akzeptiere sowohl CRON_SECRET als auch LOCAL_CRON_SECRET
+      if (
+        !authHeader ||
+        (authHeader !== `Bearer ${process.env.CRON_SECRET}` &&
+          authHeader !== `Bearer ${localCronSecret}`)
+      ) {
         console.error("Ungültiger Authorization-Header für Cron-Job");
         return NextResponse.json(
           { message: "Nicht autorisiert" },
           { status: 401 }
         );
       }
+      console.log("Produktionsmodus: Autorisierung akzeptiert für Cron-Job");
     } else {
-      console.log("Entwicklungsmodus: Authentifizierung übersprungen");
+      // In der Entwicklungsumgebung akzeptieren wir den lokalen Secret
+      if (authHeader && authHeader !== `Bearer ${localCronSecret}`) {
+        console.warn(
+          "Entwicklungsmodus: Ungültiger lokaler Authorization-Header"
+        );
+        // Trotzdem akzeptieren, aber warnen
+      }
+
+      console.log(
+        "Entwicklungsmodus: Authentifizierung akzeptiert für lokalen Cron-Job"
+      );
     }
 
     console.log("Starte Ausführung von fälligen DCA-Aufträgen");
