@@ -7,3 +7,75 @@
    - Environments: .env.local
 
  ✓ Ready in 2.7s
+ ○ Compiling / ...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+🌼   daisyUI 4.10.1
+├─ ✔︎ 2 themes added		https://daisyui.com/docs/themes
+╰─ ★ Star daisyUI on GitHub	https://github.com/saadeghi/daisyui
+
+ ✓ Compiled / in 5s (840 modules)
+Image with src "/_next/static/media/icon.b4c06bb3.png" is smaller than 40x40. Consider removing the "placeholder" property to improve performance.
+ ⨯ node_modules/next/dist/shared/lib/image-loader.js (41:26) @ defaultLoader
+ ⨯ Error: Invalid src prop (https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y) on `next/image`, hostname "www.gravatar.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at Array.map (<anonymous>)
+null
+ ✓ Compiled in 699ms (380 modules)
+ ⨯ node_modules/next/dist/shared/lib/image-loader.js (41:26) @ defaultLoader
+ ⨯ Error: Invalid src prop (https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y) on `next/image`, hostname "www.gravatar.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at Array.map (<anonymous>)
+null
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 1185ms (731 modules)
+Image with src "/_next/static/media/icon.b4c06bb3.png" is smaller than 40x40. Consider removing the "placeholder" property to improve performance.
+ ⨯ node_modules/next/dist/shared/lib/image-loader.js (41:26) @ defaultLoader
+ ⨯ Error: Invalid src prop (https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y) on `next/image`, hostname "www.gravatar.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at Array.map (<anonymous>)
+null
+ ○ Compiling /api/cron/execute-dca-orders ...
+ ✓ Compiled /api/cron/execute-dca-orders in 728ms (758 modules)
+DEBUG: Aktuelle Schlüssellänge (Buffer): 32, Schlüssel: 'Z8N6MrdtMGXqXj5T8S19SF0tKUdwtpUx'
+DEBUG: Finale Schlüssellänge (Buffer): 32 Bytes
+Entwicklungsmodus: Ungültiger lokaler Authorization-Header
+Entwicklungsmodus: Authentifizierung akzeptiert für lokalen Cron-Job
+Starte Ausführung von fälligen DCA-Aufträgen
+0 Benutzer mit fälligen DCA-Aufträgen gefunden
+ ⚠ Found a change in next.config.js. Restarting the server to apply the changes...
+ ⚠ Port 3000 is in use, trying 3001 instead.
+   ▲ Next.js 14.1.4
+   - Local:        http://localhost:3001
+   - Environments: .env.local
+
+ ✓ Ready in 2.5s
+ ⚠ Found a change in next.config.js. Restarting the server to apply the changes...
+   ▲ Next.js 14.1.4
+   - Local:        http://localhost:3000
+   - Environments: .env.local
+
+ ✓ Ready in 2.3s
+ ✓ Compiled /api/cron/execute-dca-orders in 474ms (52 modules)
+DEBUG: Aktuelle Schlüssellänge (Buffer): 32, Schlüssel: 'Z8N6MrdtMGXqXj5T8S19SF0tKUdwtpUx'
+DEBUG: Finale Schlüssellänge (Buffer): 32 Bytes
+Entwicklungsmodus: Ungültiger lokaler Authorization-Header
+Entwicklungsmodus: Authentifizierung akzeptiert für lokalen Cron-Job
+Starte Ausführung von fälligen DCA-Aufträgen
+0 Benutzer mit fälligen DCA-Aufträgen gefunden
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 1087ms (334 modules)
+ ○ Compiling /not-found ...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+🌼   daisyUI 4.10.1
+├─ ✔︎ 2 themes added		https://daisyui.com/docs/themes
+╰─ ★ Star daisyUI on GitHub	https://github.com/saadeghi/daisyui
+
+ ✓ Compiled /not-found in 3.3s (942 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1558ms (1090 modules)

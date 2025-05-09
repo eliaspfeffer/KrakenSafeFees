@@ -1,9 +1,12 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const avatars = [
+// Fallback avatars falls keine Benutzerbilder verfügbar sind
+const fallbackAvatars = [
   {
     alt: "User",
-    // Ideally, load from a statically generated image for better SEO performance (import userImage from "@/public/userImage.png")
     src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3276&q=80",
   },
   {
@@ -25,11 +28,62 @@ const avatars = [
 ];
 
 const TestimonialsAvatars = ({ priority = false }) => {
+  const [usersData, setUsersData] = useState({
+    totalUsers: 32, // Standardwert, wird durch tatsächliche Zahl ersetzt
+    profileImages: fallbackAvatars,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    // Funktion zum Abrufen der Benutzerdaten
+    const fetchUsersData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/user/count");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          setUsersData({
+            totalUsers: data.totalUsers,
+            // Wenn keine Benutzerbilder zurückgegeben werden, verwende die Fallback-Bilder
+            profileImages:
+              data.profileImages.length > 0
+                ? data.profileImages
+                : fallbackAvatars,
+          });
+        } else {
+          throw new Error(data.error || "Failed to fetch user data");
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError(true);
+        // Bei Fehler Fallback-Daten verwenden
+        setUsersData({
+          totalUsers: 32,
+          profileImages: fallbackAvatars,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsersData();
+  }, []);
+
+  // Maximal 5 Bilder anzeigen, um das Design konsistent zu halten
+  const displayAvatars = usersData.profileImages.slice(0, 5);
+
   return (
     <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-3">
       {/* AVATARS */}
       <div className={`-space-x-5 avatar-group justy-start`}>
-        {avatars.map((image, i) => (
+        {displayAvatars.map((image, i) => (
           <div className="avatar w-12 h-12" key={i}>
             <Image
               src={image.src}
@@ -63,8 +117,10 @@ const TestimonialsAvatars = ({ priority = false }) => {
         </div>
 
         <div className="text-base text-base-content/80">
-          <span className="font-semibold text-base-content">32</span> Bitcoiners
-          save on fees already
+          <span className="font-semibold text-base-content">
+            {usersData.totalUsers}
+          </span>{" "}
+          Bitcoiners save on fees already
         </div>
       </div>
     </div>
