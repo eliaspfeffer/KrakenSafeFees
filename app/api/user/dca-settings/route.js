@@ -180,7 +180,7 @@ export async function GET(req) {
     const dcaSettings = user.dcaSettings || {
       interval: "weekly",
       amount: 100,
-      useMinimumAmount: false,
+      useMinimumAmount: true,
       nextExecutionDate: getNextExecutionDate("weekly"),
       status: "scheduled",
     };
