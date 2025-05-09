@@ -93,6 +93,7 @@ export default function BitcoinPriceChart({
   const [error, setError] = useState(null);
   const [useMockData, setUseMockData] = useState(false);
   const [yearsInData, setYearsInData] = useState([]);
+  const [transformedData, setTransformedData] = useState([]); // Neue State-Variable für transformierte Daten im DOUBLE_LOG Modus
 
   // Sicherstellen, dass currentBtcPrice eine gültige Zahl ist
   const validBtcPrice =
@@ -318,6 +319,23 @@ export default function BitcoinPriceChart({
     }
   }
 
+  // Funktion zum Transformieren der Daten für den DOUBLE_LOG Modus
+  useEffect(() => {
+    if (chartData.length === 0 && projectedData.length === 0) return;
+
+    // Kombinierte Daten (historisch + projiziert)
+    const combined = [...chartData, ...projectedData.slice(1)];
+
+    // Für den DOUBLE_LOG Modus transformieren wir das Datum in einen numerischen Index
+    const transformed = combined.map((item, index) => ({
+      ...item,
+      dateIndex: index + 1, // Indizes beginnend bei 1 (für logarithmische Skala)
+      originalDate: item.date, // Das ursprüngliche Datum speichern
+    }));
+
+    setTransformedData(transformed);
+  }, [chartData, projectedData, chartMode]);
+
   // Y-Achsen-Transformation basierend auf dem Chart-Modus
   const getYAxisDomain = () => {
     if (chartData.length === 0) return [0, 0];
@@ -344,7 +362,10 @@ export default function BitcoinPriceChart({
   };
 
   // Kombiniere historische und projizierte Daten für die Anzeige
-  const combinedData = [...chartData, ...projectedData.slice(1)]; // Überspringe den ersten projizierten Punkt, da er mit dem letzten historischen übereinstimmt
+  const combinedData =
+    chartMode === CHART_MODES.DOUBLE_LOG
+      ? transformedData
+      : [...chartData, ...projectedData.slice(1)]; // Überspringe den ersten projizierten Punkt, da er mit dem letzten historischen übereinstimmt
 
   if (isLoading) {
     return (
@@ -453,28 +474,63 @@ export default function BitcoinPriceChart({
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="date"
+              dataKey={
+                chartMode === CHART_MODES.DOUBLE_LOG ? "dateIndex" : "date"
+              }
               scale={chartMode === CHART_MODES.DOUBLE_LOG ? "log" : "auto"}
+              type={
+                chartMode === CHART_MODES.DOUBLE_LOG ? "number" : "category"
+              }
+              domain={
+                chartMode === CHART_MODES.DOUBLE_LOG
+                  ? ["auto", "auto"]
+                  : undefined
+              }
               tickFormatter={(tick) => {
                 // Stellen Sie sicher, dass das Datum gültig ist
                 try {
-                  const date = new Date(tick);
-                  if (isNaN(date.getTime())) {
+                  if (chartMode === CHART_MODES.DOUBLE_LOG) {
+                    // Im DOUBLE_LOG Modus nutzen wir den Index, um das entsprechende Datum zu finden
+                    const item = transformedData.find(
+                      (item) => item.dateIndex === tick
+                    );
+                    if (item) {
+                      const date = new Date(item.originalDate);
+                      if (isNaN(date.getTime())) return "";
+                      return `${date.getDate()}.${date.getMonth() + 1}`;
+                    }
                     return "";
+                  } else {
+                    const date = new Date(tick);
+                    if (isNaN(date.getTime())) return "";
+                    return `${date.getDate()}.${date.getMonth() + 1}`;
                   }
-                  return `${date.getDate()}.${date.getMonth() + 1}`;
                 } catch (e) {
-                  console.warn("Ungültiges Datum:", tick);
+                  console.warn("Ungültiges Datum oder Index:", tick, e);
                   return "";
                 }
               }}
               tick={(props) => {
                 try {
-                  const date = new Date(props.payload.value);
-                  if (isNaN(date.getTime())) {
-                    return null;
+                  let displayDate;
+                  let year;
+
+                  if (chartMode === CHART_MODES.DOUBLE_LOG) {
+                    // Im DOUBLE_LOG Modus den Datumswert aus den transformierten Daten holen
+                    const item = transformedData.find(
+                      (item) => item.dateIndex === props.payload.value
+                    );
+                    if (!item) return null;
+
+                    displayDate = new Date(item.originalDate);
+                    if (isNaN(displayDate.getTime())) return null;
+                    year = displayDate.getFullYear();
+                  } else {
+                    displayDate = new Date(props.payload.value);
+                    if (isNaN(displayDate.getTime())) return null;
+                    year = displayDate.getFullYear();
                   }
-                  const year = date.getFullYear();
+
                   return (
                     <g transform={`translate(${props.x},${props.y})`}>
                       <text
@@ -485,16 +541,24 @@ export default function BitcoinPriceChart({
                         fill={getColorForYear(year)}
                         fontWeight="bold"
                       >
-                        {`${date.getDate()}.${date.getMonth() + 1}`}
+                        {`${displayDate.getDate()}.${
+                          displayDate.getMonth() + 1
+                        }`}
                       </text>
                     </g>
                   );
                 } catch (e) {
+                  console.warn("Fehler beim Rendern des X-Achsen-Ticks:", e);
                   return null;
                 }
               }}
-              // Im DOUBLE_LOG Modus können wir die Anzahl der Ticks anpassen
-              ticks={chartMode === CHART_MODES.DOUBLE_LOG ? null : undefined}
+              ticks={
+                chartMode === CHART_MODES.DOUBLE_LOG
+                  ? [1, 5, 10, 20, 30, 50, 100, 200, 300, 400, 500].filter(
+                      (t) => t <= transformedData.length
+                    )
+                  : undefined
+              }
             />
             <YAxis
               domain={getYAxisDomain()}
@@ -506,18 +570,73 @@ export default function BitcoinPriceChart({
               // Im logarithmischen Modus Anzahl der Ticks reduzieren
               ticks={
                 chartMode !== CHART_MODES.NORMAL
-                  ? [1000, 10000, 50000, 100000]
+                  ? [1000, 5000, 10000, 20000, 50000, 100000]
                   : undefined
               }
             />
             <Tooltip
-              formatter={(value) => [
-                `${value.toLocaleString("de-DE")} €`,
-                "Bitcoin-Preis",
-              ]}
-              labelFormatter={(label) =>
-                `Datum: ${new Date(label).toLocaleDateString("de-DE")}`
-              }
+              formatter={(value, name, props) => {
+                // Preis formatieren
+                if (name.includes("Bitcoin-Preis")) {
+                  return [`${Number(value).toLocaleString("de-DE")} €`, name];
+                }
+                return [value, name];
+              }}
+              labelFormatter={(label) => {
+                // Datum formatieren
+                if (
+                  chartMode === CHART_MODES.DOUBLE_LOG &&
+                  typeof label === "number"
+                ) {
+                  // Im DOUBLE_LOG Modus nach dem passenden Eintrag suchen
+                  const item = transformedData.find(
+                    (item) => item.dateIndex === label
+                  );
+                  if (item) {
+                    return `Datum: ${new Date(
+                      item.originalDate
+                    ).toLocaleDateString("de-DE")}`;
+                  }
+                }
+                return `Datum: ${new Date(label).toLocaleDateString("de-DE")}`;
+              }}
+              content={(props) => {
+                if (
+                  !props.active ||
+                  !props.payload ||
+                  props.payload.length === 0
+                ) {
+                  return null;
+                }
+
+                let dateDisplay;
+                if (chartMode === CHART_MODES.DOUBLE_LOG) {
+                  // Finde das Datum basierend auf dem Index
+                  const dateIndex = props.payload[0].payload.dateIndex;
+                  const item = transformedData.find(
+                    (item) => item.dateIndex === dateIndex
+                  );
+                  dateDisplay = item
+                    ? new Date(item.originalDate).toLocaleDateString("de-DE")
+                    : "N/A";
+                } else {
+                  dateDisplay = new Date(
+                    props.payload[0].payload.date
+                  ).toLocaleDateString("de-DE");
+                }
+
+                return (
+                  <div className="custom-tooltip bg-white p-2 border rounded shadow-md">
+                    <p className="font-semibold">{`Datum: ${dateDisplay}`}</p>
+                    {props.payload.map((entry, index) => (
+                      <p key={index} style={{ color: entry.color }}>
+                        {entry.name}:{" "}
+                        {Number(entry.value).toLocaleString("de-DE")} €
+                      </p>
+                    ))}
+                  </div>
+                );
+              }}
             />
             <Legend />
 
@@ -535,8 +654,23 @@ export default function BitcoinPriceChart({
                   </linearGradient>
                 </defs>
                 <ReferenceArea
-                  x1={formatDateForAPI(new Date())}
-                  x2={formatDateForAPI(new Date(endDate))}
+                  x1={
+                    chartMode === CHART_MODES.DOUBLE_LOG
+                      ? transformedData.find(
+                          (item) =>
+                            item.originalDate === formatDateForAPI(new Date())
+                        )?.dateIndex
+                      : formatDateForAPI(new Date())
+                  }
+                  x2={
+                    chartMode === CHART_MODES.DOUBLE_LOG
+                      ? transformedData.find(
+                          (item) =>
+                            item.originalDate ===
+                            formatDateForAPI(new Date(endDate))
+                        )?.dateIndex
+                      : formatDateForAPI(new Date(endDate))
+                  }
                   y1={0}
                   y2={getYAxisDomain()[1]}
                   fill="url(#dcaGradient)"
@@ -547,8 +681,23 @@ export default function BitcoinPriceChart({
                 />
                 {/* Label für den DCA-Kaufzeitraum mit Hintergrund */}
                 <ReferenceArea
-                  x1={formatDateForAPI(new Date())}
-                  x2={formatDateForAPI(new Date(endDate))}
+                  x1={
+                    chartMode === CHART_MODES.DOUBLE_LOG
+                      ? transformedData.find(
+                          (item) =>
+                            item.originalDate === formatDateForAPI(new Date())
+                        )?.dateIndex
+                      : formatDateForAPI(new Date())
+                  }
+                  x2={
+                    chartMode === CHART_MODES.DOUBLE_LOG
+                      ? transformedData.find(
+                          (item) =>
+                            item.originalDate ===
+                            formatDateForAPI(new Date(endDate))
+                        )?.dateIndex
+                      : formatDateForAPI(new Date(endDate))
+                  }
                   y1={getYAxisDomain()[1] * 0.45}
                   y2={getYAxisDomain()[1] * 0.55}
                   fill="rgba(44, 110, 73, 0.2)"
@@ -569,7 +718,15 @@ export default function BitcoinPriceChart({
             {/* Markierung für das letzte Kaufdatum */}
             {endDate && projectedData.length > 0 && (
               <ReferenceLine
-                x={formatDateForAPI(new Date(endDate))}
+                x={
+                  chartMode === CHART_MODES.DOUBLE_LOG
+                    ? transformedData.find(
+                        (item) =>
+                          item.originalDate ===
+                          formatDateForAPI(new Date(endDate))
+                      )?.dateIndex
+                    : formatDateForAPI(new Date(endDate))
+                }
                 y1={0}
                 y2={getYAxisDomain()[1] * 0.5}
                 stroke="#82ca9d"
@@ -593,7 +750,11 @@ export default function BitcoinPriceChart({
               strokeWidth={2}
               activeDot={{ r: 8 }}
               dot={false}
-              data={chartData}
+              data={
+                chartMode === CHART_MODES.DOUBLE_LOG
+                  ? transformedData.slice(0, chartData.length)
+                  : chartData
+              }
             />
 
             {/* Projizierter Preisverlauf */}
@@ -606,13 +767,24 @@ export default function BitcoinPriceChart({
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={false}
-                data={projectedData}
+                data={
+                  chartMode === CHART_MODES.DOUBLE_LOG
+                    ? transformedData.slice(chartData.length)
+                    : projectedData
+                }
               />
             )}
 
             {/* Referenzlinie für das heutige Datum */}
             <ReferenceLine
-              x={formatDateForAPI(new Date())}
+              x={
+                chartMode === CHART_MODES.DOUBLE_LOG
+                  ? transformedData.find(
+                      (item) =>
+                        item.originalDate === formatDateForAPI(new Date())
+                    )?.dateIndex
+                  : formatDateForAPI(new Date())
+              }
               stroke="blue"
               strokeWidth={3}
               label={{
@@ -626,7 +798,15 @@ export default function BitcoinPriceChart({
             {/* Referenzlinie für das Ende-Datum */}
             {endDate && projectedData.length > 0 && (
               <ReferenceLine
-                x={formatDateForAPI(new Date(endDate))}
+                x={
+                  chartMode === CHART_MODES.DOUBLE_LOG
+                    ? transformedData.find(
+                        (item) =>
+                          item.originalDate ===
+                          formatDateForAPI(new Date(endDate))
+                      )?.dateIndex
+                    : formatDateForAPI(new Date(endDate))
+                }
                 stroke="red"
                 strokeWidth={3}
                 strokeDasharray="3 3"
@@ -651,7 +831,15 @@ export default function BitcoinPriceChart({
                 return (
                   <ReferenceLine
                     key={year}
-                    x={formatDateForAPI(firstDayOfYear)}
+                    x={
+                      chartMode === CHART_MODES.DOUBLE_LOG
+                        ? transformedData.find(
+                            (item) =>
+                              item.originalDate ===
+                              formatDateForAPI(firstDayOfYear)
+                          )?.dateIndex
+                        : formatDateForAPI(firstDayOfYear)
+                    }
                     stroke={getColorForYear(year)}
                     strokeWidth={2}
                     strokeDasharray="3 3"
