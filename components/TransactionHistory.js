@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 
 export default function TransactionHistory({ userId }) {
@@ -8,8 +8,11 @@ export default function TransactionHistory({ userId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFallback, setIsFallback] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState(true);
+  const autoUpdateIntervalRef = useRef(null);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (showToast = false) => {
     setLoading(true);
     setError(null);
     setIsFallback(false);
@@ -35,20 +38,67 @@ export default function TransactionHistory({ userId }) {
       }
 
       setTransactionData(data);
+      setLastUpdated(new Date());
       setLoading(false);
+
+      if (showToast) {
+        toast.success("Transaktionen aktualisiert");
+      }
     } catch (err) {
       console.error("Fehler beim Laden der Transaktionen:", err);
       setError(err.message);
       setLoading(false);
+
+      if (showToast) {
+        toast.error("Transaktionen konnten nicht aktualisiert werden");
+      }
     }
   };
 
+  // Einmaliges Laden der Transaktionen beim Mounten
   useEffect(() => {
     fetchTransactions();
-  }, []);
+
+    // Starte automatisches Update alle 60 Sekunden
+    if (autoUpdateEnabled) {
+      autoUpdateIntervalRef.current = setInterval(() => {
+        console.log("Auto-Update: Aktualisiere Transaktionen...");
+        fetchTransactions();
+      }, 60000); // 60 Sekunden
+    }
+
+    // Cleanup-Funktion
+    return () => {
+      if (autoUpdateIntervalRef.current) {
+        clearInterval(autoUpdateIntervalRef.current);
+      }
+    };
+  }, [autoUpdateEnabled]);
+
+  // Toggle für automatische Aktualisierung
+  const toggleAutoUpdate = () => {
+    const newState = !autoUpdateEnabled;
+    setAutoUpdateEnabled(newState);
+
+    if (!newState && autoUpdateIntervalRef.current) {
+      clearInterval(autoUpdateIntervalRef.current);
+      autoUpdateIntervalRef.current = null;
+      toast.success("Automatische Aktualisierung deaktiviert");
+    } else if (newState) {
+      // Intervall neu starten
+      if (autoUpdateIntervalRef.current) {
+        clearInterval(autoUpdateIntervalRef.current);
+      }
+      autoUpdateIntervalRef.current = setInterval(() => {
+        console.log("Auto-Update: Aktualisiere Transaktionen...");
+        fetchTransactions();
+      }, 60000);
+      toast.success("Automatische Aktualisierung aktiviert (alle 60 Sekunden)");
+    }
+  };
 
   const refreshTransactions = () => {
-    toast.promise(fetchTransactions(), {
+    toast.promise(fetchTransactions(true), {
       loading: "Transaktionen werden aktualisiert...",
       success: "Transaktionen aktualisiert",
       error: "Transaktionen konnten nicht aktualisiert werden",
@@ -77,6 +127,16 @@ export default function TransactionHistory({ userId }) {
     return date.toLocaleDateString("de-DE");
   };
 
+  // Zeit formatieren
+  const formatTime = (date) => {
+    if (!date) return "";
+    return date.toLocaleTimeString("de-DE", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
+
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -103,14 +163,39 @@ export default function TransactionHistory({ userId }) {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Transaktionshistorie</h3>
-        <button
-          onClick={refreshTransactions}
-          disabled={loading}
-          className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
-        >
-          {loading ? "⟳" : "↻"} Aktualisieren
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center">
+            <label className="cursor-pointer label gap-2">
+              <span className="label-text text-xs">Auto-Update</span>
+              <input
+                type="checkbox"
+                className="toggle toggle-sm toggle-primary"
+                checked={autoUpdateEnabled}
+                onChange={toggleAutoUpdate}
+              />
+            </label>
+          </div>
+          <button
+            onClick={refreshTransactions}
+            disabled={loading}
+            className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
+          >
+            {loading ? "⟳" : "↻"} Aktualisieren
+          </button>
+        </div>
       </div>
+
+      {lastUpdated && (
+        <div className="text-xs text-gray-500 mb-2 text-right">
+          Letzte Aktualisierung: {formatTime(lastUpdated)}
+          {autoUpdateEnabled && (
+            <span className="ml-2 inline-block">
+              <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse mr-1"></span>
+              Auto-Update aktiv
+            </span>
+          )}
+        </div>
+      )}
 
       {isFallback && (
         <div className="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
