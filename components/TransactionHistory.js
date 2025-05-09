@@ -130,7 +130,6 @@ export default function TransactionHistory({ userId }) {
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
     }).format(date);
   };
 
@@ -140,7 +139,6 @@ export default function TransactionHistory({ userId }) {
     return date.toLocaleTimeString("de-DE", {
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
     });
   };
 

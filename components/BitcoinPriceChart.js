@@ -329,9 +329,18 @@ export default function BitcoinPriceChart({
     if (chartMode === CHART_MODES.NORMAL) {
       // 10% Puffer nach oben und unten
       return [minPrice * 0.9, maxPrice * 1.1];
+    } else if (
+      chartMode === CHART_MODES.DOUBLE_LOG ||
+      chartMode === CHART_MODES.LOG
+    ) {
+      // Bei logarithmischen Skalen bieten wir einen größeren Bereich an
+      // Wir verwenden explizite Werte anstelle von "auto" für bessere Kontrolle
+      // Minimum sollte nicht unter 1 sein für logarithmische Skalen
+      const safeMinPrice = Math.max(1, minPrice * 0.5);
+      return [safeMinPrice, maxPrice * 1.2];
     }
 
-    return ["auto", "auto"]; // Bei Log-Skalen lassen wir recharts den Domain berechnen
+    return ["auto", "auto"]; // Fallback
   };
 
   // Kombiniere historische und projizierte Daten für die Anzeige
@@ -447,32 +456,59 @@ export default function BitcoinPriceChart({
               dataKey="date"
               scale={chartMode === CHART_MODES.DOUBLE_LOG ? "log" : "auto"}
               tickFormatter={(tick) => {
-                const date = new Date(tick);
-                return `${date.getDate()}.${date.getMonth() + 1}`;
+                // Stellen Sie sicher, dass das Datum gültig ist
+                try {
+                  const date = new Date(tick);
+                  if (isNaN(date.getTime())) {
+                    return "";
+                  }
+                  return `${date.getDate()}.${date.getMonth() + 1}`;
+                } catch (e) {
+                  console.warn("Ungültiges Datum:", tick);
+                  return "";
+                }
               }}
               tick={(props) => {
-                const date = new Date(props.payload.value);
-                const year = date.getFullYear();
-                return (
-                  <g transform={`translate(${props.x},${props.y})`}>
-                    <text
-                      x={0}
-                      y={0}
-                      dy={16}
-                      textAnchor="middle"
-                      fill={getColorForYear(year)}
-                      fontWeight="bold"
-                    >
-                      {`${date.getDate()}.${date.getMonth() + 1}`}
-                    </text>
-                  </g>
-                );
+                try {
+                  const date = new Date(props.payload.value);
+                  if (isNaN(date.getTime())) {
+                    return null;
+                  }
+                  const year = date.getFullYear();
+                  return (
+                    <g transform={`translate(${props.x},${props.y})`}>
+                      <text
+                        x={0}
+                        y={0}
+                        dy={16}
+                        textAnchor="middle"
+                        fill={getColorForYear(year)}
+                        fontWeight="bold"
+                      >
+                        {`${date.getDate()}.${date.getMonth() + 1}`}
+                      </text>
+                    </g>
+                  );
+                } catch (e) {
+                  return null;
+                }
               }}
+              // Im DOUBLE_LOG Modus können wir die Anzahl der Ticks anpassen
+              ticks={chartMode === CHART_MODES.DOUBLE_LOG ? null : undefined}
             />
             <YAxis
               domain={getYAxisDomain()}
               scale={chartMode === CHART_MODES.NORMAL ? "auto" : "log"}
-              tickFormatter={(tick) => `${Math.round(tick / 1000)}k €`}
+              tickFormatter={(tick) => {
+                if (tick === 0) return "0 €";
+                return `${Math.round(tick / 1000)}k €`;
+              }}
+              // Im logarithmischen Modus Anzahl der Ticks reduzieren
+              ticks={
+                chartMode !== CHART_MODES.NORMAL
+                  ? [1000, 10000, 50000, 100000]
+                  : undefined
+              }
             />
             <Tooltip
               formatter={(value) => [
