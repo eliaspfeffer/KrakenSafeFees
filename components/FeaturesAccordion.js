@@ -38,7 +38,7 @@ const features = [
   {
     title: "Low Fees",
     description:
-      "Save up to 90% on fees compared to traditional platforms by using our low-cost exchange APIs.",
+      "Save up to 70% on fees compared to traditional platforms by using our low-cost exchange APIs.",
     type: "image",
     path: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80",
     alt: "Low Fees",

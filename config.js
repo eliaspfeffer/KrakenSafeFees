@@ -5,7 +5,7 @@ const config = {
   appName: "SafeKrakenFees",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
-    "Save up to 90% on Bitcoin purchase fees with automated DCA strategies. Buy BTC smarter with SafeKrakenFees.",
+    "Save up to 70% on Bitcoin purchase fees with automated DCA strategies. Buy BTC smarter with SafeKrakenFees.",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
   domainName: "safekrakenfees.com",
   crisp: {
@@ -33,7 +33,7 @@ const config = {
         priceAnchor: 15,
         features: [
           {
-            name: "Save up to 90% on Kraken fees",
+            name: "Save up to 70% on Kraken fees",
           },
           { name: "Weekly automated DCA purchases" },
           { name: "Real-time market prices without spreads" },
@@ -53,7 +53,7 @@ const config = {
         price: 5,
         priceAnchor: 25,
         features: [
-          { name: "Save up to 90% on Kraken fees" },
+          { name: "Save up to 70% on Kraken fees" },
           { name: "Daily, weekly or custom DCA intervals" },
           { name: "Customizable Spend-Everything-Until Date" },
           { name: "Real-time market prices without spreads" },

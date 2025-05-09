@@ -50,46 +50,90 @@ const TOS = () => {
           Back
         </Link>
         <h1 className="text-3xl font-extrabold pb-6">
-          Terms and Conditions for {config.appName}
+          Terms and Conditions for SaveKrakenFees
         </h1>
 
         <pre
           className="leading-relaxed whitespace-pre-wrap"
           style={{ fontFamily: "sans-serif" }}
         >
-          {`Last Updated: September 26, 2023
+          {`Last Updated: ${new Date().toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
 
-Welcome to ShipFast!
+TERMS AND CONDITIONS FOR SAVEKRAKENFEES
 
-These Terms of Service ("Terms") govern your use of the ShipFast website at https://shipfa.st ("Website") and the services provided by ShipFast. By using our Website and services, you agree to these Terms.
+PLEASE READ THESE TERMS AND CONDITIONS CAREFULLY BEFORE USING OUR SERVICES.
 
-1. Description of ShipFast
+1. ACCEPTANCE OF TERMS
 
-ShipFast is a platform that offers a JavaScript code boilerplate to assist entrepreneurs in launching their startups more efficiently.
+By using the SaveKrakenFees website (the "Platform") or any part of our services, you expressly and unconditionally agree to these Terms and Conditions ("Terms"). If you disagree with any part of these Terms, YOU MUST NOT USE THE PLATFORM.
 
-2. Ownership and Usage Rights
+2. DESCRIPTION OF SERVICES
 
-When you purchase a package from ShipFast, you gain the right to download and use the code provided for creating applications. You own the code you create but do not have the right to resell it. We offer a full refund within 7 days of purchase, as specified in our refund policy.
+SaveKrakenFees is a platform that enables automated Bitcoin purchases via the Kraken API. The platform aims to help users perform Dollar-Cost-Averaging (DCA) strategies with lower fees.
 
-3. User Data and Privacy
+2.1 RELATIONSHIP DISCLAIMER: 
 
-We collect and store user data, including name, email, and payment information, as necessary to provide our services. For details on how we handle your data, please refer to our Privacy Policy at https://shipfa.st/privacy-policy.
+SAVEKRAKENFEES IS NOT AFFILIATED WITH, ENDORSED BY, OR CONNECTED TO KRAKEN (PAYWARD, INC.) IN ANY WAY. We are an independent third-party service that utilizes Kraken's publicly available API. "Kraken" is a registered trademark owned by Payward, Inc. We do not attempt to impersonate, copy, or clone Kraken's services or brand. We simply provide a complementary service that helps users automate transactions through their own Kraken accounts. All Kraken-related services are performed through the user's own Kraken account using API keys provided by the user.
 
-4. Non-Personal Data Collection
+3. RISK DISCLOSURE AND DISCLAIMER
 
-We use web cookies to collect non-personal data for the purpose of improving our services and user experience.
+3.1 CRYPTOCURRENCY RISKS: The use of cryptocurrencies and related services involves substantial financial risks. Cryptocurrency values can fluctuate dramatically and are not regulated. YOU ACKNOWLEDGE THAT YOU FULLY UNDERSTAND AND ACCEPT THE RISKS ASSOCIATED WITH CRYPTOCURRENCIES.
 
-5. Governing Law
+3.2 NO FINANCIAL ADVICE: SaveKrakenFees does NOT provide financial advice, investment advice, or any other professional advisory services. All information provided through the Platform is for informational purposes only and does not constitute financial advice.
 
-These Terms are governed by the laws of France.
+3.3 NO GUARANTEE OF SUCCESS: We do not guarantee that the use of our services will result in cost savings, financial gains, or any particular outcome. Past results are not a guarantee of future results.
 
-6. Updates to the Terms
+3.4 COMPLETE DISCLAIMER OF LIABILITY:
 
-We may update these Terms from time to time. Users will be notified of any changes via email.
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, SAVEKRAKENFEES IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES. WE DISCLAIM ALL LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES ARISING FROM YOUR USE OF OR INABILITY TO USE THE PLATFORM, INCLUDING BUT NOT LIMITED TO:
 
-For any questions or concerns regarding these Terms of Service, please contact us at marc@shipfa.st.
+- LOSS OF INVESTMENTS, PROFITS, USE, DATA, OR OTHER INTANGIBLE LOSSES
+- ERRORS OR INACCURACIES IN CONTENT
+- PERSONAL INJURY OR PROPERTY DAMAGE OF ANY KIND
+- UNAUTHORIZED ACCESS TO OUR SERVICES OR SERVERS
+- INTERRUPTIONS, BUGS, FAILURES, OR DELAYS IN OUR SERVICES
+- ERRORS IN THE KRAKEN API OR OTHER THIRD-PARTY SERVICES
+- ANY DAMAGES CAUSED BY THIRD PARTIES OF ANY KIND
 
-Thank you for using ShipFast!`}
+4. USE OF KRAKEN API
+
+4.1 OWN API KEYS: You are responsible for the security of your own Kraken API keys. We shall under no circumstances be liable for any damages arising from compromise, improper use, or abuse of your API keys.
+
+4.2 THIRD-PARTY SERVICES: Our Platform accesses services from third parties such as Kraken. We have no control over these services and assume no responsibility for their availability, accuracy, or functionality.
+
+5. PRIVACY AND SECURITY
+
+5.1 API KEYS: We implement reasonable security measures to protect your API keys, but we cannot guarantee absolute security. You should use API keys with restricted permissions that only allow the functions necessary for our services.
+
+5.2 DATA COLLECTION: We collect and store user data, including name, email, and, if applicable, payment information, as well as API keys with your explicit consent.
+
+6. FEES AND PAYMENTS
+
+6.1 TRANSPARENT FEES: We charge a service fee for the use of our Platform as indicated on our website. This fee is in addition to any fees charged by Kraken or other third parties.
+
+6.2 NO GUARANTEE OF FEE SAVINGS: While our Platform aims to reduce fees, we do not guarantee any specific savings compared to other services.
+
+7. CHANGES TO TERMS
+
+We reserve the right to modify these Terms at any time. Continued use of the Platform after such modifications constitutes your consent to the modified Terms.
+
+8. GOVERNING LAW
+
+These Terms are governed by the laws of Germany, without regard to its conflict of law provisions. Any disputes arising out of or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts in Germany.
+
+9. SEVERABILITY
+
+If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions will remain in full force and effect.
+
+BY USING OUR SERVICES, YOU ACKNOWLEDGE THAT YOU HAVE READ AND UNDERSTOOD THESE TERMS AND AGREE TO BE BOUND BY THEM.
+
+For any questions regarding these Terms of Service, please contact us at ${
+            config.resend.supportEmail
+          }.`}
         </pre>
       </div>
     </main>

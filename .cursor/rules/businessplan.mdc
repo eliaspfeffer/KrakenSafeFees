@@ -9,7 +9,7 @@ globs:
 - Instead of manually executing DCA (Dollar-Cost Averaging), users can **automate daily, weekly, or monthly BTC buys**.
 - **No hidden spreads** – our platform uses **live market prices** from the order book.
 - We provide **secure API key management**, with optional time-based or volume-based transaction limits.
-- Compared to Kraken’s standard app, users save up to **90% in fees** over time.
+- Compared to Kraken’s standard app, users save up to **70% in fees** over time.
 - **Target users**: Bitcoin savers investing €50–500 per month who want to optimize costs.
 - **Revenue model**:
   - Transparent low service fee (0.1–0.2%) vs. Kraken’s ~2%

@@ -12,7 +12,7 @@ const Pricing = () => {
         <div className="flex flex-col text-center w-full mb-20">
           <p className="font-medium text-primary mb-8">Pricing</p>
           <h2 className="font-bold text-3xl lg:text-5xl tracking-tight">
-            Save up to 90% on fees with our platform
+            Save up to 70% on fees with our platform
           </h2>
           <p className="text-base-content/80 mt-4">
             Our platform adds only a 0.1% service fee on top of Kraken

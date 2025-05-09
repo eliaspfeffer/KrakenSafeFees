@@ -19,7 +19,7 @@ const faqList = [
     question: "How much can I save on fees?",
     answer: (
       <p>
-        By using our platform, you can save up to 90% in fees compared to the
+        By using our platform, you can save up to 70% in fees compared to the
         standard Kraken app, thanks to our low-cost exchange APIs.
       </p>
     ),

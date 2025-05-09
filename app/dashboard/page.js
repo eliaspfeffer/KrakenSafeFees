@@ -87,7 +87,7 @@ export default async function Dashboard() {
           <div className="card-body">
             <h2 className="card-title text-2xl">Bitcoin DCA Strategie</h2>
             <p className="my-4">
-              Sparen Sie bis zu 90% an Gebühren beim Bitcoin-Kauf mit unserer
+              Sparen Sie bis zu 70% an Gebühren beim Bitcoin-Kauf mit unserer
               automatisierten Dollar-Cost-Averaging (DCA) Strategie. Anstatt die
               normale Kraken App mit hohen Gebühren von ca. 1.5% + Spread zu
               nutzen, verwenden wir Ihre API-Keys, um Käufe über Kraken Pro mit

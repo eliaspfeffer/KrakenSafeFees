@@ -1,11 +1,12 @@
 import Image from "next/image";
 import config from "@/config";
+import footerImage from "@/app/footerImage.png";
 
 const CTA = () => {
   return (
     <section className="relative hero overflow-hidden min-h-screen">
       <Image
-        src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80"
+        src={footerImage}
         alt="Background"
         className="object-cover w-full"
         fill
@@ -17,7 +18,7 @@ const CTA = () => {
             Automate your Bitcoin purchases and save big
           </h2>
           <p className="text-lg opacity-80 mb-12 md:mb-16">
-            Join us today to start saving up to 90% on fees and automate your
+            Join us today to start saving up to 70% on fees and automate your
             investments effortlessly.
           </p>
 
