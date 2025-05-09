@@ -4,6 +4,18 @@ Hey maker 👋 it's Marc from [ShipFast](https://shipfa.st/docs). Let's get your
 
 <sub>**Watch/Star the repo to be notified when updates are pushed**</sub>
 
+## Start Server via Shell Script:
+
+     ./krakensafefees.sh start
+     ./krakensafefees.sh status
+
+### Die letzten Log-Einträge ansehen:
+
+     tail -f ~/Documents/Github/krakensafefees/dev-server.log
+
+     ./krakensafefees.sh stop
+     ./krakensafefees.sh restart
+
 ## Get Started
 
 1. Follow the [Get Started Tutorial](https://shipfa.st/docs) to clone the repo and run your local server 💻
