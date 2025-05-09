@@ -1,8 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import TestimonialsAvatars from "./TestimonialsAvatars";
 import config from "@/config";
+import HeroImage from "@/app/heroImage.png";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const router = useRouter();
+
+  // Gemeinsame Funktion für Button und Bild-Klick
+  const handleSaveFeesClick = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <section className="max-w-7xl mx-auto bg-base-100 flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-20 px-8 py-8 lg:py-20">
       <div className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
@@ -29,19 +40,31 @@ const Hero = () => {
           take advantage of lower Kraken Pro fees. Simply enter your API keys
           and get started.
         </p>
-        <button className="btn btn-primary btn-wide">Save fees now</button>
+        <button
+          className="btn btn-primary btn-wide"
+          onClick={handleSaveFeesClick}
+        >
+          Save fees now
+        </button>
 
         <TestimonialsAvatars priority={true} />
       </div>
       <div className="lg:w-full">
-        <Image
-          src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80"
-          alt="Product Demo"
-          className="w-full"
-          priority={true}
-          width={500}
-          height={500}
-        />
+        <div
+          className="rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+          onClick={handleSaveFeesClick}
+          role="button"
+          aria-label="Save fees now"
+        >
+          <Image
+            src={HeroImage}
+            alt="Product Demo"
+            className="w-full hover:scale-105 transition-transform duration-300"
+            priority={true}
+            width={500}
+            height={500}
+          />
+        </div>
       </div>
     </section>
   );

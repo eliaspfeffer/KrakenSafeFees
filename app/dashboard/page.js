@@ -216,9 +216,13 @@ export default async function Dashboard() {
                     <tr>
                       <td>
                         {dcaSettings.nextExecutionDate
-                          ? new Date(
-                              dcaSettings.nextExecutionDate
-                            ).toLocaleDateString("de-DE")
+                          ? new Intl.DateTimeFormat("de-DE", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(dcaSettings.nextExecutionDate))
                           : getNextExecutionDate(dcaSettings.interval)}
                       </td>
                       <td>€{dcaSettings.amount.toFixed(2)}</td>
@@ -339,8 +343,14 @@ function getNextExecutionDate(interval) {
       nextDate.setDate(today.getDate() + 7); // Standardmäßig eine Woche
   }
 
-  // Formatiere das Datum als DD.MM.YYYY
-  return nextDate.toLocaleDateString("de-DE");
+  // Formatiere das Datum mit Uhrzeit (Tag.Monat.Jahr, Stunde:Minute)
+  return new Intl.DateTimeFormat("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(nextDate);
 }
 
 // Hilfsfunktion, um den Status in eine deutsche Bezeichnung zu übersetzen

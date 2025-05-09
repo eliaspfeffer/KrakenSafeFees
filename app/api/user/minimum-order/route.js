@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // Mindestbestellwert für Bitcoin abrufen
-    const { orderMinBtc, orderMinEur } =
+    const { orderMinBtc, orderMinEur, btcPrice } =
       await getMinimumBitcoinOrderForXBTEUR();
 
     // Erfolgreiche Antwort zurückgeben
@@ -27,6 +27,7 @@ export async function GET() {
       success: true,
       orderMinBtc,
       orderMinEur,
+      btcPrice,
       // Formatierter Mindestbestellwert für die Anzeige
       orderMinEurFormatted: new Intl.NumberFormat("de-DE", {
         style: "currency",

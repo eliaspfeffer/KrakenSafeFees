@@ -37,7 +37,7 @@ function getNextExecutionDate(interval) {
 // Funktion zur Berechnung der Standard-Gebühr (die bei Kraken App angefallen wäre)
 function calculateStandardFee(amount) {
   // Kraken App Gebühr: ~1.5% + Spread von ~0.5%
-  return amount * 0.02;
+  return amount * 0.01;
 }
 
 // Funktion zur Berechnung der tatsächlichen Gebühr
