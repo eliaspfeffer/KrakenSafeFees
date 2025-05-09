@@ -15,7 +15,15 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
   const [isLoading, setIsLoading] = useState(false);
   const [minimumOrder, setMinimumOrder] = useState(null);
   const [isLoadingMinimum, setIsLoadingMinimum] = useState(true);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [euroBalance, setEuroBalance] = useState(0);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const router = useRouter();
+
+  // Vergleichswerte für die Änderungserkennung
+  const initialAmount = initialSettings?.amount || 100;
+  const initialIntervalValue = initialSettings?.interval || "weekly";
+  const initialUseMinimumAmount = initialSettings?.useMinimumAmount || false;
 
   // Laden des Mindestbestellwerts beim ersten Rendern
   useEffect(() => {
@@ -38,6 +46,45 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
 
     fetchMinimumOrder();
   }, []);
+
+  // Laden des aktuellen Kontostands
+  useEffect(() => {
+    async function fetchBalance() {
+      try {
+        setIsLoadingBalance(true);
+        const response = await fetch("/api/user/kraken-balance");
+        if (response.ok) {
+          const data = await response.json();
+          setEuroBalance(data.euroBalance || 0);
+        } else {
+          console.error("Fehler beim Abrufen des Kontostands");
+        }
+      } catch (error) {
+        console.error("Fehler beim Abrufen des Kontostands:", error);
+      } finally {
+        setIsLoadingBalance(false);
+      }
+    }
+
+    fetchBalance();
+  }, []);
+
+  // Effekt zur Erkennung von Änderungen
+  useEffect(() => {
+    const amountChanged = parseFloat(amount) !== parseFloat(initialAmount);
+    const intervalChanged = interval !== initialIntervalValue;
+    const useMinimumAmountChanged =
+      useMinimumAmount !== initialUseMinimumAmount;
+
+    setHasChanges(amountChanged || intervalChanged || useMinimumAmountChanged);
+  }, [
+    amount,
+    interval,
+    useMinimumAmount,
+    initialAmount,
+    initialIntervalValue,
+    initialUseMinimumAmount,
+  ]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,6 +116,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
       }
 
       toast.success("DCA-Einstellungen erfolgreich gespeichert!");
+      setHasChanges(false);
 
       // Refresh the page to show the updated UI
       router.refresh();
@@ -84,6 +132,60 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
   const isAmountBelowMinimum =
     minimumOrder && parseFloat(amount) < minimumOrder.orderMinEur;
 
+  // Berechnung, wie lange der aktuelle Kontostand reicht
+  const calculateTimeRemaining = () => {
+    if (euroBalance <= 0 || amount <= 0) return null;
+
+    // Anzahl möglicher Käufe
+    const possiblePurchases = Math.floor(euroBalance / parseFloat(amount));
+    if (possiblePurchases <= 0) return null;
+
+    // Basierend auf dem Intervall die Zeit berechnen
+    let timeUnit = "";
+    let timeValue = 0;
+
+    switch (interval) {
+      case "minutely":
+        timeUnit = possiblePurchases === 1 ? "Minute" : "Minuten";
+        timeValue = possiblePurchases;
+        break;
+      case "hourly":
+        timeUnit = possiblePurchases === 1 ? "Stunde" : "Stunden";
+        timeValue = possiblePurchases;
+        break;
+      case "daily":
+        if (possiblePurchases < 30) {
+          timeUnit = possiblePurchases === 1 ? "Tag" : "Tage";
+          timeValue = possiblePurchases;
+        } else {
+          const months = Math.floor(possiblePurchases / 30);
+          timeUnit = months === 1 ? "Monat" : "Monate";
+          timeValue = months;
+        }
+        break;
+      case "weekly":
+        if (possiblePurchases < 4) {
+          timeUnit = possiblePurchases === 1 ? "Woche" : "Wochen";
+          timeValue = possiblePurchases;
+        } else {
+          const months = Math.floor(possiblePurchases / 4);
+          timeUnit = months === 1 ? "Monat" : "Monate";
+          timeValue = months;
+        }
+        break;
+      case "monthly":
+        timeUnit = possiblePurchases === 1 ? "Monat" : "Monate";
+        timeValue = possiblePurchases;
+        break;
+      default:
+        return null;
+    }
+
+    return { value: timeValue, unit: timeUnit, purchases: possiblePurchases };
+  };
+
+  const timeRemaining = calculateTimeRemaining();
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="form-control w-full max-w-xs">
@@ -95,6 +197,8 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
           value={interval}
           onChange={(e) => setInterval(e.target.value)}
         >
+          <option value="minutely">Minütlich (Test)</option>
+          <option value="hourly">Stündlich</option>
           <option value="daily">Täglich</option>
           <option value="weekly">Wöchentlich</option>
           <option value="monthly">Monatlich</option>
@@ -170,13 +274,70 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
         </div>
       )}
 
+      {/* Hochrechnung anzeigen */}
+      {!isLoadingBalance && euroBalance > 0 && timeRemaining && (
+        <div className="alert alert-info mt-2 p-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="stroke-current shrink-0 h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <div>
+            <div className="font-semibold">Hochrechnung:</div>
+            <p className="text-sm">
+              Ihr aktuelles Euro-Guthaben von {euroBalance.toFixed(2)} € reicht
+              für ca. {timeRemaining.value} {timeRemaining.unit} (
+              {timeRemaining.purchases} Käufe).
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Warnung bei ungespeicherten Änderungen */}
+      {hasChanges && (
+        <div className="alert alert-warning animate-pulse mt-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <span>
+            Sie haben ungespeicherte Änderungen. Bitte speichern Sie die
+            Einstellungen!
+          </span>
+        </div>
+      )}
+
       <div className="card-actions justify-end mt-4">
         <button
           type="submit"
-          className={`btn btn-primary ${isLoading ? "loading" : ""}`}
+          className={`btn ${hasChanges ? "btn-warning" : "btn-primary"} ${
+            isLoading ? "loading" : ""
+          }`}
           disabled={isLoading}
         >
-          {isLoading ? "Speichert..." : "Einstellungen speichern"}
+          {isLoading
+            ? "Speichert..."
+            : hasChanges
+            ? "Änderungen speichern!"
+            : "Einstellungen speichern"}
         </button>
       </div>
     </form>

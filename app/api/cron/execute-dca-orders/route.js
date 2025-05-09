@@ -12,6 +12,12 @@ function getNextExecutionDate(interval) {
   let nextDate = new Date(today);
 
   switch (interval) {
+    case "minutely":
+      nextDate.setMinutes(today.getMinutes() + 1);
+      break;
+    case "hourly":
+      nextDate.setHours(today.getHours() + 1);
+      break;
     case "daily":
       nextDate.setDate(today.getDate() + 1);
       break;
