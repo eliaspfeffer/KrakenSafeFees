@@ -3,7 +3,8 @@ import { decryptData } from "@/lib/encryption";
 import { buyBitcoin } from "@/lib/krakenApi";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-import Transaction from "@/models/Transaction";
+// Das Mongoose-Model wird nicht direkt importiert, weil wir direkt mit MongoDB arbeiten
+// import Transaction from "@/models/Transaction";
 
 // Hilfsfunktion zur Berechnung des nächsten Ausführungsdatums
 function getNextExecutionDate(interval) {
@@ -126,19 +127,25 @@ async function executeDCAOrders(req) {
         const publicKey = user.krakenApiKeys.public;
         const encryptedSecretKey = user.krakenApiKeys.secret;
         const amount = user.dcaSettings.amount;
+        const useMinimumAmount = user.dcaSettings.useMinimumAmount === true;
 
         // Secret Key entschlüsseln
         const secretKey = decryptData(encryptedSecretKey);
 
         // Führe den Bitcoin-Kauf durch
-        const purchaseResult = await buyBitcoin(publicKey, secretKey, amount);
+        const purchaseResult = await buyBitcoin(
+          publicKey,
+          secretKey,
+          amount,
+          useMinimumAmount
+        );
 
-        // Erstelle eine neue Transaktion
-        let transaction;
+        // Initialisiere das Transaktionsobjekt für die direkte MongoDB-Speicherung
+        let transactionDoc;
 
         if (purchaseResult.success) {
-          // Erfolgreich - neue Transaktion erstellen
-          transaction = new Transaction({
+          // Erfolgreich - erstelle das Transaktionsdokument
+          transactionDoc = {
             userId: user._id,
             btcAmount: purchaseResult.estimatedBtcAmount,
             eurAmount: amount,
@@ -148,10 +155,19 @@ async function executeDCAOrders(req) {
             status: "completed",
             krakenTxId: purchaseResult.txid,
             notes: `DCA Auftrag automatisch ausgeführt. Order: ${purchaseResult.orderDescription}`,
-          });
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
 
-          // Transaktion in der Datenbank speichern
-          await transaction.save();
+          try {
+            // Transaktion direkt in der MongoDB speichern (anstatt Mongoose zu verwenden)
+            await db.collection("transactions").insertOne(transactionDoc);
+            console.log("Transaktion erfolgreich in der Datenbank gespeichert");
+          } catch (dbError) {
+            // Fehlerbehandlung nur für das Speichern der Transaktion
+            console.error("Fehler beim Speichern der Transaktion:", dbError);
+            // Wir werfen den Fehler nicht erneut, da der Kauf bereits erfolgreich war
+          }
 
           // Status auf "completed" setzen und nächstes Ausführungsdatum berechnen
           await db.collection("users").updateOne(
@@ -175,8 +191,8 @@ async function executeDCAOrders(req) {
             )}`
           );
         } else {
-          // Fehlgeschlagen - Fehler-Transaktion erstellen
-          transaction = new Transaction({
+          // Fehlgeschlagen - erstelle das Fehler-Transaktionsdokument
+          transactionDoc = {
             userId: user._id,
             btcAmount: 0,
             eurAmount: amount,
@@ -185,10 +201,20 @@ async function executeDCAOrders(req) {
             standardFee: calculateStandardFee(amount),
             status: "failed",
             notes: `DCA Auftrag fehlgeschlagen: ${purchaseResult.error}`,
-          });
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
 
-          // Fehler-Transaktion in der Datenbank speichern
-          await transaction.save();
+          try {
+            // Fehler-Transaktion direkt in der MongoDB speichern
+            await db.collection("transactions").insertOne(transactionDoc);
+          } catch (dbError) {
+            // Fehlerbehandlung nur für das Speichern der Transaktion
+            console.error(
+              "Fehler beim Speichern der Fehler-Transaktion:",
+              dbError
+            );
+          }
 
           // Status zurücksetzen und Fehlgeschlagen markieren
           await db.collection("users").updateOne(

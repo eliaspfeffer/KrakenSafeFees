@@ -54,7 +54,7 @@ export async function POST(req) {
       );
     }
 
-    const { userId, interval, amount } = body;
+    const { userId, interval, amount, useMinimumAmount } = body;
 
     if (!interval || !amount) {
       return NextResponse.json(
@@ -92,6 +92,13 @@ export async function POST(req) {
     const nextExecutionDate = getNextExecutionDate(interval);
     console.log("Nächstes Ausführungsdatum:", nextExecutionDate);
 
+    // Konvertiere useMinimumAmount zu einem Boolean
+    const useMinimumAmountBoolean =
+      useMinimumAmount === true || useMinimumAmount === "true";
+    console.log(
+      `useMinimumAmount: ${useMinimumAmount} (als Boolean: ${useMinimumAmountBoolean})`
+    );
+
     // DCA-Einstellungen für den User speichern
     const result = await db.collection("users").updateOne(
       { _id: user._id },
@@ -100,6 +107,7 @@ export async function POST(req) {
           dcaSettings: {
             interval,
             amount: parseFloat(amount),
+            useMinimumAmount: useMinimumAmountBoolean,
             nextExecutionDate: nextExecutionDate,
             status: "scheduled",
             updatedAt: new Date(),
@@ -166,6 +174,7 @@ export async function GET(req) {
     const dcaSettings = user.dcaSettings || {
       interval: "weekly",
       amount: 100,
+      useMinimumAmount: false,
       nextExecutionDate: getNextExecutionDate("weekly"),
       status: "scheduled",
     };
