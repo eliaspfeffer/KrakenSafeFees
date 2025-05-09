@@ -660,6 +660,8 @@ export default function BitcoinPriceChart({
                           (item) =>
                             item.originalDate === formatDateForAPI(new Date())
                         )?.dateIndex
+                      : chartData.length > 0
+                      ? chartData[chartData.length - 1].date
                       : formatDateForAPI(new Date())
                   }
                   x2={
@@ -669,6 +671,8 @@ export default function BitcoinPriceChart({
                             item.originalDate ===
                             formatDateForAPI(new Date(endDate))
                         )?.dateIndex
+                      : projectedData.length > 0
+                      ? projectedData[projectedData.length - 1].date
                       : formatDateForAPI(new Date(endDate))
                   }
                   y1={0}
@@ -687,6 +691,8 @@ export default function BitcoinPriceChart({
                           (item) =>
                             item.originalDate === formatDateForAPI(new Date())
                         )?.dateIndex
+                      : chartData.length > 0
+                      ? chartData[chartData.length - 1].date
                       : formatDateForAPI(new Date())
                   }
                   x2={
@@ -696,6 +702,8 @@ export default function BitcoinPriceChart({
                             item.originalDate ===
                             formatDateForAPI(new Date(endDate))
                         )?.dateIndex
+                      : projectedData.length > 0
+                      ? projectedData[projectedData.length - 1].date
                       : formatDateForAPI(new Date(endDate))
                   }
                   y1={getYAxisDomain()[1] * 0.45}
@@ -725,6 +733,8 @@ export default function BitcoinPriceChart({
                           item.originalDate ===
                           formatDateForAPI(new Date(endDate))
                       )?.dateIndex
+                    : projectedData.length > 0
+                    ? projectedData[projectedData.length - 1].date
                     : formatDateForAPI(new Date(endDate))
                 }
                 y1={0}
@@ -783,6 +793,8 @@ export default function BitcoinPriceChart({
                       (item) =>
                         item.originalDate === formatDateForAPI(new Date())
                     )?.dateIndex
+                  : chartData.length > 0
+                  ? chartData[chartData.length - 1].date
                   : formatDateForAPI(new Date())
               }
               stroke="blue"
@@ -805,6 +817,8 @@ export default function BitcoinPriceChart({
                           item.originalDate ===
                           formatDateForAPI(new Date(endDate))
                       )?.dateIndex
+                    : projectedData.length > 0
+                    ? projectedData[projectedData.length - 1].date
                     : formatDateForAPI(new Date(endDate))
                 }
                 stroke="red"

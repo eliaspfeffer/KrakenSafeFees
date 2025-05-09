@@ -12,16 +12,22 @@ export default function LocalCronJobManager() {
   const [isRunning, setIsRunning] = useState(false);
   const [nextCheck, setNextCheck] = useState(null);
   const [showDebug, setShowDebug] = useState(false);
+  const [isBrowser, setIsBrowser] = useState(false);
   const isProduction = process.env.NODE_ENV === "production";
   const isCronDisabled = process.env.DISABLE_LOCAL_CRON === "true";
 
   // Konfigurierte Intervalle aus Umgebungsvariablen lesen
   const cronInterval = parseInt(process.env.LOCAL_CRON_INTERVAL || "600000"); // Standard: 10 Minuten
 
+  // Prüfen, ob wir uns im Browser befinden, um Hydration-Fehler zu vermeiden
+  useEffect(() => {
+    setIsBrowser(true);
+  }, []);
+
   // Initialisieren und Aufräumen des Cron-Managers
   useEffect(() => {
-    // Wenn Cron-Jobs deaktiviert sind, nichts tun
-    if (isCronDisabled) return;
+    // Wenn nicht im Browser oder Cron-Jobs deaktiviert sind, nichts tun
+    if (!isBrowser || isCronDisabled) return;
 
     console.log("LocalCronJobManager: Initialisiere lokalen Cron-Manager...");
     startLocalCronJobs();
@@ -34,7 +40,7 @@ export default function LocalCronJobManager() {
       stopLocalCronJobs();
       setIsRunning(false);
     };
-  }, [isCronDisabled]);
+  }, [isCronDisabled, isBrowser]);
 
   // Update des nächsten Check-Zeitpunkts (für Debug-Anzeige)
   const updateNextCheckTime = () => {
@@ -59,8 +65,8 @@ export default function LocalCronJobManager() {
     });
   };
 
-  // Wenn Cron-Jobs deaktiviert sind, nichts anzeigen
-  if (isCronDisabled) return null;
+  // Wenn Cron-Jobs deaktiviert sind oder wir nicht im Browser sind, nichts anzeigen
+  if (isCronDisabled || !isBrowser) return null;
 
   // Debug-Indikatoren für die Entwicklung und Produktion
   return (
