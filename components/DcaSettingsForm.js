@@ -214,24 +214,24 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="form-control w-full max-w-xs">
           <label className="label">
-            <span className="label-text">DCA-Intervall</span>
+            <span className="label-text">DCA-Interval</span>
           </label>
           <select
             className="select select-bordered"
             value={interval}
             onChange={(e) => setInterval(e.target.value)}
           >
-            <option value="minutely">Minütlich (Test)</option>
-            <option value="hourly">Stündlich</option>
-            <option value="daily">Täglich</option>
-            <option value="weekly">Wöchentlich</option>
-            <option value="monthly">Monatlich</option>
+            <option value="minutely">Minutely (Test)</option>
+            <option value="hourly">Hourly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
           </select>
         </div>
 
         <div className="form-control w-full max-w-xs">
           <label className="label">
-            <span className="label-text">Kaufbetrag (EUR)</span>
+            <span className="label-text">Buy amount (EUR)</span>
           </label>
           <input
             type="number"
@@ -247,7 +247,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
           {minimumOrder && (
             <label className="label">
               <span className="label-text-alt">
-                Mindestbestellwert bei Kraken:{" "}
+                Minimum order value at Kraken:{" "}
                 {minimumOrder.orderMinEurFormatted}
               </span>
             </label>
@@ -286,15 +286,14 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
                 className="checkbox checkbox-primary"
               />
               <span className="label-text">
-                Immer Mindestbestellwert verwenden, falls nötig
+                Always use minimum order value if necessary
               </span>
             </label>
             <label className="label">
               <span className="label-text-alt">
-                Wenn aktiviert, wird automatisch der Mindestbestellwert von
-                Kraken verwendet, falls Ihr eingestellter Betrag darunter liegt.
-                So wird sichergestellt, dass Ihre Orders immer ausgeführt werden
-                können.
+                If activated, the minimum order value of Kraken is automatically
+                used if your set amount is lower. This ensures that your orders
+                can always be executed .
               </span>
             </label>
           </div>
@@ -318,11 +317,11 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
               />
             </svg>
             <div>
-              <div className="font-semibold">Hochrechnung:</div>
+              <div className="font-semibold">Projection:</div>
               <p className="text-sm">
-                Ihr aktuelles Euro-Guthaben von {euroBalance.toFixed(2)} €
-                reicht für ca. {timeRemaining.value} {timeRemaining.unit} (
-                {timeRemaining.purchases} Käufe) bis{" "}
+                Your current Euro balance of {euroBalance.toFixed(2)} € is
+                sufficient for approximately {timeRemaining.value}{" "}
+                {timeRemaining.unit} ({timeRemaining.purchases} purchases) until{" "}
                 {timeRemaining.formattedEndDate}.
               </p>
             </div>
@@ -345,10 +344,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
               />
             </svg>
-            <span>
-              Sie haben ungespeicherte Änderungen. Bitte speichern Sie die
-              Einstellungen!
-            </span>
+            <span>You have unsaved changes. Please save the settings!</span>
           </div>
         )}
 
@@ -361,10 +357,10 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
             disabled={isLoading}
           >
             {isLoading
-              ? "Speichert..."
+              ? "Saving..."
               : hasChanges
-              ? "Änderungen speichern!"
-              : "Einstellungen speichern"}
+              ? "Save changes!"
+              : "Save settings"}
           </button>
         </div>
       </form>

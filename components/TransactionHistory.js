@@ -167,7 +167,7 @@ export default function TransactionHistory({ userId }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold">Transaktionshistorie</h3>
+        <h3 className="text-xl font-semibold">Transaction history</h3>
         <div className="flex items-center gap-2">
           <div className="flex items-center">
             <label className="cursor-pointer label gap-2">
@@ -185,22 +185,22 @@ export default function TransactionHistory({ userId }) {
             disabled={loading}
             className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
           >
-            {loading ? "⟳" : "↻"} Aktualisieren
+            {loading ? "⟳" : "↻"} Refresh
           </button>
         </div>
       </div>
 
       {lastUpdated && (
         <div className="text-xs text-gray-500 mb-2 text-right">
-          Letzte Aktualisierung: {formatTime(lastUpdated)}
+          Last refresh: {formatTime(lastUpdated)}
           {autoUpdateEnabled && (
             <span className="ml-2 inline-block">
               <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse mr-1"></span>
-              Auto-Update aktiv
+              Auto-update acive
             </span>
           )}
           <span className="ml-2">
-            (Alle Zeiten in{" "}
+            (All times in{" "}
             {
               new Date()
                 .toLocaleTimeString("de-DE", { timeZoneName: "short" })
@@ -227,7 +227,7 @@ export default function TransactionHistory({ userId }) {
               />
             </svg>
             <p>
-              <strong>Hinweis:</strong> Es werden Test-Daten angezeigt.
+              <strong>Note:</strong> Test data is being displayed.
             </p>
           </div>
         </div>
@@ -235,19 +235,19 @@ export default function TransactionHistory({ userId }) {
 
       {loading ? (
         <div className="flex justify-center items-center h-24">
-          <div className="text-gray-400">Laden...</div>
+          <div className="text-gray-400">Loading...</div>
         </div>
       ) : transactionData?.transactions?.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="table w-full">
             <thead>
               <tr>
-                <th>Datum</th>
-                <th>Betrag (EUR)</th>
+                <th>Date</th>
+                <th>Amount (EUR)</th>
                 <th>Bitcoin</th>
-                <th>Unsere Gebühr</th>
-                <th>Normale Gebühr</th>
-                <th>Ersparnis</th>
+                <th>Our Fee</th>
+                <th>Standard Fee</th>
+                <th>Savings</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -273,10 +273,10 @@ export default function TransactionHistory({ userId }) {
                       }`}
                     >
                       {tx.status === "completed"
-                        ? "Abgeschlossen"
+                        ? "Completed"
                         : tx.status === "pending"
-                        ? "In Bearbeitung"
-                        : "Fehlgeschlagen"}
+                        ? "In Progress"
+                        : "Failed"}
                     </span>
                   </td>
                 </tr>
@@ -286,12 +286,10 @@ export default function TransactionHistory({ userId }) {
         </div>
       ) : (
         <div className="text-center py-8 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">
-            Noch keine Transaktionen durchgeführt.
-          </p>
+          <p className="text-gray-500">No transactions have been made yet.</p>
           <p className="text-sm text-gray-400 mt-2">
-            Die ersten DCA-Käufe werden gemäß Ihren Einstellungen bald
-            durchgeführt.
+            The first DCA purchases will be made soon according to your
+            settings.
           </p>
         </div>
       )}
@@ -299,7 +297,7 @@ export default function TransactionHistory({ userId }) {
       {transactionData?.transactions?.length > 0 && (
         <div className="mt-6 flex justify-end">
           <div className="bg-green-50 border border-green-100 rounded-lg p-4 max-w-xs">
-            <div className="text-sm text-green-700">Gesamtersparnis</div>
+            <div className="text-sm text-green-700">Total Savings</div>
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(transactionData.totalSavings)}
             </div>

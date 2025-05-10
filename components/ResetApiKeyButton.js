@@ -56,7 +56,7 @@ export default function ResetApiKeyButton({ userId }) {
       className={`btn btn-outline btn-error ${isLoading ? "loading" : ""}`}
       disabled={isLoading}
     >
-      {isLoading ? "Wird zurückgesetzt..." : "API Keys zurücksetzen"}
+      {isLoading ? "Resetting..." : "Reset API Keys"}
     </button>
   );
 }

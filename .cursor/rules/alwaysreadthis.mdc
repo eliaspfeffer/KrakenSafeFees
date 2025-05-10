@@ -12,7 +12,7 @@ Führe zunächst `fetch_rules` mit allen verfügbaren Regeln aus:
 - `businessplan` - Verstehe den Nutzen und die Vorteile der Plattform
 - `generalbusinessidea` - Erhalte einen Überblick über das Geschäftskonzept
 - `krakenprofees` - Informiere dich über die Kosten- und Preisstruktur
-- `safekrakenfees` - **WICHTIG:** Diese Regel enthält Grundprinzipien für alle Code-Änderungen
+- `SaveKrakenFees` - **WICHTIG:** Diese Regel enthält Grundprinzipien für alle Code-Änderungen
 
 ## 2. Projektübersicht
 
@@ -35,7 +35,7 @@ Bei der Arbeit am Projekt beachte bitte:
 - Behalte die Sicherheit bei der Handhabung von API-Keys im Fokus
 - Schreibe ausführliche Kommentare für neue Funktionen
 - Vermeide Debug-Ausgaben mit sensiblen Daten in Produktionscode
-- Triff deinen eigenen technischen Entscheidungen, aber halte dich an die in `safekrakenfees` definierten Grundprinzipien
+- Triff deinen eigenen technischen Entscheidungen, aber halte dich an die in `SaveKrakenFees` definierten Grundprinzipien
 
 ## 5. Wichtige Dokumentation
 

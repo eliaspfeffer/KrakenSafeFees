@@ -2,12 +2,12 @@ import themes from "daisyui/src/theming/themes";
 
 const config = {
   // REQUIRED
-  appName: "SafeKrakenFees",
+  appName: "SaveKrakenFees",
   // REQUIRED: a short description of your app for SEO tags (can be overwritten)
   appDescription:
-    "Save up to 70% on Bitcoin purchase fees with automated DCA strategies. Buy BTC smarter with SafeKrakenFees.",
+    "Save up to 70% on Bitcoin purchase fees with automated DCA strategies. Buy BTC smarter with SaveKrakenFees.",
   // REQUIRED (no https://, not trialing slash at the end, just the naked domain)
-  domainName: "safekrakenfees.com",
+  domainName: "SaveKrakenFees.lol",
   crisp: {
     // Crisp website ID. IF YOU DON'T USE CRISP: just remove this => Then add a support email in this config file (resend.supportEmail) otherwise customer support won't work.
     id: "",
@@ -72,11 +72,11 @@ const config = {
   },
   resend: {
     // REQUIRED — Email 'From' field to be used when sending magic login links
-    fromNoReply: `SafeKrakenFees <noreply@safekrakenfees.com>`,
+    fromNoReply: `SaveKrakenFees <noreply@SaveKrakenFees.lol>`,
     // REQUIRED — Email 'From' field to be used when sending other emails, like abandoned carts, updates etc..
-    fromAdmin: `Support at SafeKrakenFees <support@safekrakenfees.com>`,
+    fromAdmin: `Support at SaveKrakenFees <support@SaveKrakenFees.lol>`,
     // Email shown to customer if need support. Leave empty if not needed => if empty, set up Crisp above, otherwise you won't be able to offer customer support."
-    supportEmail: "support@safekrakenfees.com",
+    supportEmail: "support@SaveKrakenFees.lol",
   },
   colors: {
     // REQUIRED — The DaisyUI theme to use (added to the main layout.js). Leave blank for default (light & dark mode). If you any other theme than light/dark, you need to add it in config.tailwind.js in daisyui.themes.

@@ -133,15 +133,13 @@ export default function KrakenBalance({ userId }) {
   return (
     <div className="bg-white shadow rounded-lg p-6 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">
-          Kraken Kontostand
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-800">Kraken Balance</h2>
         <button
           onClick={refreshBalance}
           disabled={loading}
           className="flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
         >
-          {loading ? "⟳" : "↻"} Aktualisieren
+          {loading ? "⟳" : "↻"} Refresh
         </button>
       </div>
 
@@ -211,13 +209,13 @@ export default function KrakenBalance({ userId }) {
           {/* Total Value */}
           <div className="border-t pt-4">
             <div className="flex justify-between items-center">
-              <span className="text-lg text-gray-700">Gesamtwert</span>
+              <span className="text-lg text-gray-700">Total Value</span>
               <span className="text-2xl font-bold text-gray-900">
                 {formatCurrency(balanceData.totalValueInEuro)}
               </span>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <span className="text-sm text-gray-600">Bitcoin-Kurs</span>
+              <span className="text-sm text-gray-600">Bitcoin price</span>
               <span className="text-sm font-medium text-gray-700">
                 {formatCurrency(balanceData.btcPrice)} / BTC
               </span>

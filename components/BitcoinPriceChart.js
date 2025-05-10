@@ -398,14 +398,14 @@ export default function BitcoinPriceChart({
 
   return (
     <div className="card bg-base-200 shadow-xl p-4">
-      <h3 className="text-xl font-semibold mb-2">Bitcoin-Preisverlauf</h3>
+      <h3 className="text-xl font-semibold mb-2">Bitcoin Price History</h3>
       <p className="mb-4 text-sm">
-        Bei aktuellen Einstellungen ({amount}€ {getIntervalText(interval)}) wird
-        Ihr Guthaben am{" "}
+        With current settings ({amount}€ {getIntervalText(interval)}), your
+        balance will be depleted on{" "}
         <span className="font-semibold">
-          {endDate ? new Date(endDate).toLocaleDateString("de-DE") : "N/A"}
-        </span>{" "}
-        erschöpft sein.
+          {endDate ? new Date(endDate).toLocaleDateString("en-US") : "N/A"}
+        </span>
+        .
       </p>
 
       {useMockData && (
@@ -456,7 +456,7 @@ export default function BitcoinPriceChart({
             }`}
             onClick={() => setChartMode(CHART_MODES.DOUBLE_LOG)}
           >
-            Doppel-Log
+            Powerlaw
           </button>
         </div>
       </div>
@@ -713,7 +713,7 @@ export default function BitcoinPriceChart({
                   strokeWidth={1}
                   strokeOpacity={0.8}
                   label={{
-                    value: "DCA-Kaufzeitraum",
+                    value: "DCA Purchase Period",
                     fill: "#2c6e49",
                     fontWeight: "bold",
                     fontSize: 14,
@@ -755,7 +755,7 @@ export default function BitcoinPriceChart({
             <Line
               type="monotone"
               dataKey="price"
-              name="Bitcoin-Preis (historisch)"
+              name="Historical Bitcoin Price"
               stroke="#8884d8"
               strokeWidth={2}
               activeDot={{ r: 8 }}
@@ -772,7 +772,7 @@ export default function BitcoinPriceChart({
               <Line
                 type="monotone"
                 dataKey="price"
-                name="Bitcoin-Preis (Projektion)"
+                name="Projected Bitcoin Price"
                 stroke="#82ca9d"
                 strokeWidth={2}
                 strokeDasharray="5 5"
@@ -905,31 +905,31 @@ export default function BitcoinPriceChart({
       <div className="mt-4">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-[#8884d8]"></div>
-          <span className="text-xs">Historischer Preisverlauf</span>
+          <span className="text-xs">Historical Price Trend</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-[#82ca9d]"></div>
-          <span className="text-xs">Projizierter Preisverlauf</span>
+          <span className="text-xs">Projected Price Trend</span>
         </div>
         <div className="flex items-center gap-2 mt-2">
           <div className="w-12 h-3 bg-[#82ca9d] opacity-20 border border-[#82ca9d]"></div>
-          <span className="text-xs">DCA-Kaufzeitraum</span>
+          <span className="text-xs">DCA Purchase Period</span>
         </div>
         <div className="flex items-center gap-2 mt-2">
           <div className="w-4 h-0.5 bg-blue-500 h-1"></div>
-          <span className="text-xs">Heutiges Datum</span>
+          <span className="text-xs">Today's Date</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-0.5 bg-red-500 h-1"></div>
           <span className="text-xs">
-            Erschöpfungsdatum:{" "}
-            {endDate ? new Date(endDate).toLocaleDateString("de-DE") : "N/A"}
+            Depletion Date:{" "}
+            {endDate ? new Date(endDate).toLocaleDateString("en-US") : "N/A"}
           </span>
         </div>
 
         {/* Jahreslegende */}
         <div className="mt-3 border-t pt-2">
-          <span className="text-xs font-semibold">Jahre:</span>
+          <span className="text-xs font-semibold">Years:</span>
           <div className="flex flex-wrap gap-3 mt-1">
             {yearsInData.map((year) => (
               <div key={year} className="flex items-center gap-1">

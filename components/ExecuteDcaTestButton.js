@@ -89,7 +89,7 @@ export default function ExecuteDcaTestButton({ userId }) {
           className={`btn btn-secondary ${isLoading ? "loading" : ""}`}
           disabled={isLoading || isScheduling}
         >
-          {isLoading ? "Führt aus..." : "DCA-Prozess ausführen"}
+          {isLoading ? "Executing..." : "Run DCA Process"}
         </button>
 
         <button
@@ -99,15 +99,13 @@ export default function ExecuteDcaTestButton({ userId }) {
           }`}
           disabled={isLoading || isScheduling}
         >
-          {isScheduling
-            ? "Aktualisiert..."
-            : "Ausführungsdatum auf jetzt setzen"}
+          {isScheduling ? "Updating..." : "Set execution date to now"}
         </button>
       </div>
 
       {result && (
         <div className="mt-4 p-4 bg-base-300 rounded-lg">
-          <h4 className="font-bold mb-2">Testausführung Ergebnis:</h4>
+          <h4 className="font-bold mb-2">Test Execution Result:</h4>
           <pre className="text-xs overflow-auto max-h-48">
             {JSON.stringify(result, null, 2)}
           </pre>
