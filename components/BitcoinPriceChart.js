@@ -916,7 +916,7 @@ export default function BitcoinPriceChart({
         </div>
         <div className="flex items-center gap-2 mt-2">
           <div className="w-4 h-0.5 bg-blue-500 h-1"></div>
-          <span className="text-xs">Today's Date</span>
+          <span className="text-xs">Today&apos;s Date</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-0.5 bg-red-500 h-1"></div>

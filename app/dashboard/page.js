@@ -231,7 +231,7 @@ export default async function Dashboard() {
                   <ol className="list-decimal list-inside space-y-1 ml-2">
                     <li>Log in to your Kraken account</li>
                     <li>Go to Security &gt; API</li>
-                    <li>Click on "Add new API key"</li>
+                    <li>Click on &quot;Add new API key&quot;</li>
                     <li>Enable only the trade permission</li>
                     <li>Disable all withdrawal permissions</li>
                     <li>Copy the API key and private key</li>
