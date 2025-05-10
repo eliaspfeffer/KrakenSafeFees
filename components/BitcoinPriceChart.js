@@ -116,7 +116,7 @@ export default function BitcoinPriceChart({
         // Versuch 1: CoinGecko API für echte historische Bitcoin-Preise (bevorzugt)
         try {
           console.log(`Fetching price history from CoinGecko for ${days} days`);
-          // CoinGecko API bietet kostenlose historische Bitcoin-Preisdaten
+          // CoinGecko gibt Preise als [timestamp, price] Arrays zurück
           const coingeckoUrl = `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=eur&days=${days}&interval=daily`;
 
           const response = await fetch(coingeckoUrl);
@@ -125,7 +125,6 @@ export default function BitcoinPriceChart({
             const data = await response.json();
 
             if (data && data.prices && data.prices.length > 0) {
-              // CoinGecko gibt Preise als [timestamp, price] Arrays zurück
               const chartData = data.prices.map(([timestamp, price]) => ({
                 date: formatDateForAPI(new Date(timestamp)),
                 price: price,
@@ -424,10 +423,10 @@ export default function BitcoinPriceChart({
             />
           </svg>
           <span>
-            <strong>Hinweis:</strong> Es werden simulierte Preisdaten angezeigt,
-            da keine echten historischen Daten verfügbar sind. Diese Daten
-            dienen nur zur Visualisierung und spiegeln nicht den tatsächlichen
-            historischen Bitcoin-Preis wider.
+            <strong>Note:</strong> Simulated price data is being displayed as no
+            real historical data is available. This data is for visualization
+            purposes only and does not reflect the actual historical Bitcoin
+            price.
           </span>
         </div>
       )}
@@ -593,12 +592,12 @@ export default function BitcoinPriceChart({
                     (item) => item.dateIndex === label
                   );
                   if (item) {
-                    return `Datum: ${new Date(
+                    return `Date: ${new Date(
                       item.originalDate
                     ).toLocaleDateString("de-DE")}`;
                   }
                 }
-                return `Datum: ${new Date(label).toLocaleDateString("de-DE")}`;
+                return `Date: ${new Date(label).toLocaleDateString("de-DE")}`;
               }}
               content={(props) => {
                 if (
@@ -627,7 +626,7 @@ export default function BitcoinPriceChart({
 
                 return (
                   <div className="custom-tooltip bg-white p-2 border rounded shadow-md">
-                    <p className="font-semibold">{`Datum: ${dateDisplay}`}</p>
+                    <p className="font-semibold">{`Date: ${dateDisplay}`}</p>
                     {props.payload.map((entry, index) => (
                       <p key={index} style={{ color: entry.color }}>
                         {entry.name}:{" "}
@@ -743,7 +742,7 @@ export default function BitcoinPriceChart({
                 strokeWidth={3}
                 label={{
                   position: "right",
-                  value: "Letzter Kauf",
+                  value: "Last Purchase",
                   fill: "#82ca9d",
                   fontSize: 10,
                   fontWeight: "bold",
@@ -801,7 +800,7 @@ export default function BitcoinPriceChart({
               strokeWidth={3}
               label={{
                 position: "top",
-                value: "Heute",
+                value: "Today",
                 fill: "blue",
                 fontSize: 12,
               }}
@@ -826,7 +825,7 @@ export default function BitcoinPriceChart({
                 strokeDasharray="3 3"
                 label={{
                   position: "top",
-                  value: "Erschöpft",
+                  value: "Depleted",
                   fill: "red",
                   fontSize: 12,
                   fontWeight: "bold",
@@ -951,15 +950,15 @@ export default function BitcoinPriceChart({
 function getIntervalText(interval) {
   switch (interval) {
     case "minutely":
-      return "pro Minute";
+      return "per minute";
     case "hourly":
-      return "pro Stunde";
+      return "per hour";
     case "daily":
-      return "pro Tag";
+      return "per day";
     case "weekly":
-      return "pro Woche";
+      return "per week";
     case "monthly":
-      return "pro Monat";
+      return "per month";
     default:
       return "";
   }

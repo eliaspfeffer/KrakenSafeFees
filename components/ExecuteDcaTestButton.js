@@ -4,15 +4,15 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 /**
- * Button zum manuellen Testen der DCA-Ausführung
- * Diese Komponente ist nur für Entwicklungs- und Testzwecke gedacht
+ * Button to manually test DCA execution
+ * This component is only for development and testing purposes
  */
 export default function ExecuteDcaTestButton({ userId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isScheduling, setIsScheduling] = useState(false);
   const [result, setResult] = useState(null);
 
-  // Ausführung des DCA-Prozesses
+  // Execute DCA process
   const handleExecuteTest = async () => {
     setIsLoading(true);
     setResult(null);
@@ -27,7 +27,7 @@ export default function ExecuteDcaTestButton({ userId }) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Ein Fehler ist aufgetreten");
+        throw new Error(error.message || "An error occurred");
       }
 
       const data = await response.json();
@@ -35,22 +35,22 @@ export default function ExecuteDcaTestButton({ userId }) {
 
       if (data.result.processed && data.result.processed > 0) {
         toast.success(
-          `${data.result.processed} DCA-Aufträge erfolgreich ausgeführt!`
+          `${data.result.processed} DCA orders successfully executed!`
         );
       } else {
         toast.info(
-          "Keine fälligen DCA-Aufträge gefunden. Versuchen Sie, das nächste Ausführungsdatum auf jetzt zu setzen."
+          "No pending DCA orders found. Try setting the next execution date to now."
         );
       }
     } catch (error) {
-      console.error("Fehler beim Ausführen des DCA-Tests:", error);
-      toast.error(error.message || "Ein Fehler ist aufgetreten");
+      console.error("Error executing DCA test:", error);
+      toast.error(error.message || "An error occurred");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Setzt das nächste Ausführungsdatum auf jetzt
+  // Set the next execution date to now
   const handleSetToNow = async () => {
     setIsScheduling(true);
 
@@ -65,17 +65,17 @@ export default function ExecuteDcaTestButton({ userId }) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Ein Fehler ist aufgetreten");
+        throw new Error(error.message || "An error occurred");
       }
 
       const data = await response.json();
-      toast.success("Nächstes Ausführungsdatum auf jetzt gesetzt!");
+      toast.success("Next execution date set to now!");
 
-      // Seite neu laden, um aktualisierte Daten anzuzeigen
+      // Reload the page to display updated data
       window.location.reload();
     } catch (error) {
-      console.error("Fehler beim Setzen des Ausführungsdatums:", error);
-      toast.error(error.message || "Ein Fehler ist aufgetreten");
+      console.error("Error setting execution date:", error);
+      toast.error(error.message || "An error occurred");
     } finally {
       setIsScheduling(false);
     }

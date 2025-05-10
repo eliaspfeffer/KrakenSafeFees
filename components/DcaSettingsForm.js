@@ -21,12 +21,12 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const router = useRouter();
 
-  // Vergleichswerte für die Änderungserkennung
+  // Comparison values for change detection
   const initialAmount = initialSettings?.amount || 100;
   const initialIntervalValue = initialSettings?.interval || "weekly";
   const initialUseMinimumAmount = initialSettings?.useMinimumAmount || true;
 
-  // Laden des Mindestbestellwerts beim ersten Rendern
+  // Load the minimum order value on initial rendering
   useEffect(() => {
     async function fetchMinimumOrder() {
       try {
@@ -36,10 +36,10 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
           const data = await response.json();
           setMinimumOrder(data);
         } else {
-          console.error("Fehler beim Abrufen des Mindestbestellwerts");
+          console.error("Error fetching minimum order value");
         }
       } catch (error) {
-        console.error("Fehler beim Abrufen des Mindestbestellwerts:", error);
+        console.error("Error fetching minimum order value:", error);
       } finally {
         setIsLoadingMinimum(false);
       }
@@ -48,7 +48,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
     fetchMinimumOrder();
   }, []);
 
-  // Laden des aktuellen Kontostands
+  // Load the current account balance
   useEffect(() => {
     async function fetchBalance() {
       try {
@@ -58,10 +58,10 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
           const data = await response.json();
           setEuroBalance(data.euroBalance || 0);
         } else {
-          console.error("Fehler beim Abrufen des Kontostands");
+          console.error("Error fetching account balance");
         }
       } catch (error) {
-        console.error("Fehler beim Abrufen des Kontostands:", error);
+        console.error("Error fetching account balance:", error);
       } finally {
         setIsLoadingBalance(false);
       }
@@ -70,7 +70,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
     fetchBalance();
   }, []);
 
-  // Effekt zur Erkennung von Änderungen
+  // Effect for change detection
   useEffect(() => {
     const amountChanged = parseFloat(amount) !== parseFloat(initialAmount);
     const intervalChanged = interval !== initialIntervalValue;
@@ -91,7 +91,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
     e.preventDefault();
 
     if (!amount || amount <= 0) {
-      toast.error("Bitte geben Sie einen gültigen Betrag ein");
+      toast.error("Please enter a valid amount");
       return;
     }
 
@@ -113,77 +113,77 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Ein Fehler ist aufgetreten");
+        throw new Error(error.message || "An error occurred");
       }
 
-      toast.success("DCA-Einstellungen erfolgreich gespeichert!");
+      toast.success("DCA settings saved successfully!");
       setHasChanges(false);
 
       // Refresh the page to show the updated UI
       router.refresh();
     } catch (error) {
       console.error("Error saving DCA settings:", error);
-      toast.error(error.message || "Ein Fehler ist aufgetreten");
+      toast.error(error.message || "An error occurred");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Prüfung, ob der eingestellte Betrag unter dem Mindestbestellwert liegt
+  // Check if the set amount is below the minimum order value
   const isAmountBelowMinimum =
     minimumOrder && parseFloat(amount) < minimumOrder.orderMinEur;
 
-  // Berechnung, wie lange der aktuelle Kontostand reicht
+  // Calculate how long the current balance will last
   const calculateTimeRemaining = () => {
     if (euroBalance <= 0 || amount <= 0) return null;
 
-    // Anzahl möglicher Käufe
+    // Number of possible purchases
     const possiblePurchases = Math.floor(euroBalance / parseFloat(amount));
     if (possiblePurchases <= 0) return null;
 
-    // Basierend auf dem Intervall die Zeit berechnen
+    // Based on the interval, calculate the time
     let timeUnit = "";
     let timeValue = 0;
 
-    // Ende-Datum berechnen
+    // Calculate end date
     const now = new Date();
     let endDate = new Date(now);
 
     switch (interval) {
       case "minutely":
-        timeUnit = possiblePurchases === 1 ? "Minute" : "Minuten";
+        timeUnit = possiblePurchases === 1 ? "Minute" : "Minutes";
         timeValue = possiblePurchases;
         endDate.setMinutes(now.getMinutes() + possiblePurchases);
         break;
       case "hourly":
-        timeUnit = possiblePurchases === 1 ? "Stunde" : "Stunden";
+        timeUnit = possiblePurchases === 1 ? "Hour" : "Hours";
         timeValue = possiblePurchases;
         endDate.setHours(now.getHours() + possiblePurchases);
         break;
       case "daily":
         if (possiblePurchases < 30) {
-          timeUnit = possiblePurchases === 1 ? "Tag" : "Tage";
+          timeUnit = possiblePurchases === 1 ? "Day" : "Days";
           timeValue = possiblePurchases;
         } else {
           const months = Math.floor(possiblePurchases / 30);
-          timeUnit = months === 1 ? "Monat" : "Monate";
+          timeUnit = months === 1 ? "Month" : "Months";
           timeValue = months;
         }
         endDate.setDate(now.getDate() + possiblePurchases);
         break;
       case "weekly":
         if (possiblePurchases < 4) {
-          timeUnit = possiblePurchases === 1 ? "Woche" : "Wochen";
+          timeUnit = possiblePurchases === 1 ? "Week" : "Weeks";
           timeValue = possiblePurchases;
         } else {
           const months = Math.floor(possiblePurchases / 4);
-          timeUnit = months === 1 ? "Monat" : "Monate";
+          timeUnit = months === 1 ? "Month" : "Months";
           timeValue = months;
         }
         endDate.setDate(now.getDate() + possiblePurchases * 7);
         break;
       case "monthly":
-        timeUnit = possiblePurchases === 1 ? "Monat" : "Monate";
+        timeUnit = possiblePurchases === 1 ? "Month" : "Months";
         timeValue = possiblePurchases;
         endDate.setMonth(now.getMonth() + possiblePurchases);
         break;
@@ -191,7 +191,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
         return null;
     }
 
-    // Datum formatieren
+    // Format date
     const formattedEndDate = endDate.toLocaleDateString("de-DE", {
       day: "2-digit",
       month: "2-digit",
@@ -268,9 +268,8 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
                 />
               </svg>
               <span>
-                Der Betrag liegt unter dem Mindestbestellwert von Kraken.
-                Aktivieren Sie die Option unten, um Fehler bei der Order zu
-                vermeiden.
+                The amount is below the minimum order value of Kraken. Enable
+                the option below to avoid errors with the order.
               </span>
             </div>
           )}
@@ -299,7 +298,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
           </div>
         )}
 
-        {/* Hochrechnung anzeigen */}
+        {/* Projection display */}
         {!isLoadingBalance && euroBalance > 0 && timeRemaining && (
           <div className="alert alert-info mt-2 p-3">
             <svg
@@ -328,7 +327,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
           </div>
         )}
 
-        {/* Warnung bei ungespeicherten Änderungen */}
+        {/* Warning for unsaved changes */}
         {hasChanges && (
           <div className="alert alert-warning animate-pulse mt-2">
             <svg
@@ -365,7 +364,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
         </div>
       </form>
 
-      {/* Bitcoin-Preis-Chart anzeigen */}
+      {/* Display Bitcoin price chart */}
       {!isLoadingBalance && euroBalance > 0 && timeRemaining && (
         <BitcoinPriceChart
           endDate={timeRemaining.endDate}
