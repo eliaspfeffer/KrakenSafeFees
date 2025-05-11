@@ -213,10 +213,10 @@ export default async function Dashboard() {
                 </a>
 
                 {/* Image showing required API permissions */}
-                <div className="my-4 ">
+                <div className="my-4">
                   <Image
                     src={KrakenImage}
-                    alt="Product Demo"
+                    alt="Required Kraken API Permissions"
                     className="w-full hover:scale-105 transition-transform duration-300 rounded-lg"
                     priority={true}
                     width={500}

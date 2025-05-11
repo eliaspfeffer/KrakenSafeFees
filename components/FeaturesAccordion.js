@@ -16,8 +16,8 @@ const features = [
     description:
       "Automate your Bitcoin purchases with daily, weekly, or monthly intervals, eliminating manual processes.",
     type: "video",
-    path: "https://d3m8mk7e1mf7xn.cloudfront.net/app/newsletter.webm",
-    format: "video/webm",
+    path: "/demovideo.mp4",
+    format: "video/mp4",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -135,18 +135,20 @@ const Media = ({ feature }) => {
 
   if (type === "video") {
     return (
-      <video
-        className={style}
-        autoPlay
-        muted
-        loop
-        playsInline
-        controls
-        width={size.width}
-        height={size.height}
-      >
-        <source src={path} type={format} />
-      </video>
+      <div className={style + " overflow-hidden"}>
+        <video
+          className="w-full h-full object-cover scale-150"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          width={size.width}
+          height={size.height}
+        >
+          <source src={path} type={format} />
+        </video>
+      </div>
     );
   } else if (type === "image") {
     return (
