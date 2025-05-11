@@ -133,7 +133,7 @@ export async function POST(req) {
     }
 
     return NextResponse.json({
-      message: "DCA-Einstellungen erfolgreich gespeichert",
+      message: "DCA-Settings successfully saved",
       result: result,
     });
   } catch (error) {

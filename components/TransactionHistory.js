@@ -59,15 +59,15 @@ export default function TransactionHistory({ userId }) {
   useEffect(() => {
     fetchTransactions();
 
-    // Starte automatisches Update alle 60 Sekunden
+    // Start automatic update every 60 seconds
     if (autoUpdateEnabled) {
       autoUpdateIntervalRef.current = setInterval(() => {
-        console.log("Auto-Update: Aktualisiere Transaktionen...");
+        console.log("Auto-Update: Updating transactions...");
         fetchTransactions();
-      }, 60000); // 60 Sekunden
+      }, 60000); // 60 seconds
     }
 
-    // Cleanup-Funktion
+    // Cleanup function
     return () => {
       if (autoUpdateIntervalRef.current) {
         clearInterval(autoUpdateIntervalRef.current);
@@ -75,7 +75,7 @@ export default function TransactionHistory({ userId }) {
     };
   }, [autoUpdateEnabled]);
 
-  // Toggle für automatische Aktualisierung
+  // Toggle for automatic update
   const toggleAutoUpdate = () => {
     const newState = !autoUpdateEnabled;
     setAutoUpdateEnabled(newState);
@@ -83,39 +83,39 @@ export default function TransactionHistory({ userId }) {
     if (!newState && autoUpdateIntervalRef.current) {
       clearInterval(autoUpdateIntervalRef.current);
       autoUpdateIntervalRef.current = null;
-      toast.success("Automatische Aktualisierung deaktiviert");
+      toast.success("Automatic update disabled");
     } else if (newState) {
-      // Intervall neu starten
+      // Restart interval
       if (autoUpdateIntervalRef.current) {
         clearInterval(autoUpdateIntervalRef.current);
       }
       autoUpdateIntervalRef.current = setInterval(() => {
-        console.log("Auto-Update: Aktualisiere Transaktionen...");
+        console.log("Auto-Update: Updating transactions...");
         fetchTransactions();
       }, 60000);
-      toast.success("Automatische Aktualisierung aktiviert (alle 60 Sekunden)");
+      toast.success("Automatic update enabled (every 60 seconds)");
     }
   };
 
   const refreshTransactions = () => {
     toast.promise(fetchTransactions(true), {
-      loading: "Transaktionen werden aktualisiert...",
-      success: "Transaktionen aktualisiert",
-      error: "Transaktionen konnten nicht aktualisiert werden",
+      loading: "Updating transactions...",
+      success: "Transactions updated",
+      error: "Could not update transactions",
     });
   };
 
-  // Euro formatieren
+  // Format Euro
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat("de-DE", {
+    return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "EUR",
     }).format(value);
   };
 
-  // Bitcoin formatieren
+  // Format Bitcoin
   const formatBitcoin = (value) => {
-    return new Intl.NumberFormat("de-DE", {
+    return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 8,
       maximumFractionDigits: 8,
     }).format(value);

@@ -38,7 +38,7 @@ export default function ResetApiKeyButton({ userId }) {
         );
       }
 
-      toast.success("API-Keys erfolgreich zurückgesetzt!");
+      toast.success("successfully reseted API-Keys!");
 
       // Seite neu laden, um die UI zu aktualisieren (ApiKeyForm sollte wieder erscheinen)
       router.refresh();

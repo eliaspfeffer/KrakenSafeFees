@@ -9,38 +9,13 @@ import { authOptions } from "@/libs/next-auth";
  */
 export async function GET() {
   try {
-    // Prüfen, ob der Benutzer authentifiziert ist
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: "Nicht authentifiziert" },
-        { status: 401 }
-      );
-    }
-
-    // Mindestbestellwert für Bitcoin abrufen
-    const { orderMinBtc, orderMinEur, btcPrice } =
-      await getMinimumBitcoinOrderForXBTEUR();
-
-    // Erfolgreiche Antwort zurückgeben
-    return NextResponse.json({
-      success: true,
-      orderMinBtc,
-      orderMinEur,
-      btcPrice,
-      // Formatierter Mindestbestellwert für die Anzeige
-      orderMinEurFormatted: new Intl.NumberFormat("de-DE", {
-        style: "currency",
-        currency: "EUR",
-      }).format(orderMinEur),
-    });
+    console.log("Retrieving minimum order value for Bitcoin...");
+    const result = await getMinimumBitcoinOrderForXBTEUR();
+    return NextResponse.json(result);
   } catch (error) {
-    console.error("Fehler beim Abrufen des Mindestbestellwerts:", error);
+    console.error("Error retrieving minimum order value:", error);
     return NextResponse.json(
-      {
-        error: "Mindestbestellwert konnte nicht abgerufen werden",
-        details: error.message,
-      },
+      { error: error.message || "Unknown error occurred" },
       { status: 500 }
     );
   }

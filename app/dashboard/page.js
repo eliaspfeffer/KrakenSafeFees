@@ -201,6 +201,14 @@ export default async function Dashboard() {
                   securely stored in our database and only used to execute your
                   Bitcoin purchases.
                 </p>
+                <a
+                  href="https://pro.kraken.com/app/settings/api"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mb-4 text-blue-600 underline hover:text-blue-800"
+                >
+                  Go to Kraken API Settings
+                </a>
                 <div className="alert alert-warning my-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

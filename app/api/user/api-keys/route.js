@@ -99,7 +99,7 @@ export async function POST(req) {
     }
 
     return NextResponse.json({
-      message: "API Keys erfolgreich gespeichert",
+      message: "API Keys saved!",
       result: result,
     });
   } catch (error) {

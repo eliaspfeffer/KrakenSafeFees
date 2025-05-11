@@ -17,37 +17,37 @@ export default function KrakenBalance({ userId }) {
     setIsFallback(false);
 
     try {
-      console.log("Rufe Kontostand von API ab...");
+      console.log("Fetching balance from API...");
       const response = await fetch("/api/user/kraken-balance");
 
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Fehler-Antwort vom Server:", data);
-        throw new Error(data.message || "Fehler beim Abrufen des Kontostands", {
+        console.error("Error response from server:", data);
+        throw new Error(data.message || "Error fetching balance", {
           cause: data,
         });
       }
 
-      console.log("Kontostand erfolgreich abgerufen");
+      console.log("Balance successfully retrieved");
 
-      // Prüfen, ob es sich um Fallback-Daten handelt
+      // Check if it's fallback data
       if (data._fallback) {
-        console.log("Hinweis: Verwende Test-Daten (Fallback)");
+        console.log("Note: Using test data (fallback)");
         setIsFallback(true);
 
-        // Originalen Fehler speichern, falls vorhanden
+        // Store original error if present
         if (data._error) {
-          setErrorDetails("Original API-Fehler: " + data._error);
+          setErrorDetails("Original API Error: " + data._error);
         }
       }
 
       setBalanceData(data);
       setLoading(false);
     } catch (err) {
-      console.error("Fehler beim Laden des Kontostands:", err);
+      console.error("Error loading balance:", err);
 
-      // Versuche, zusätzliche Fehlerinformationen zu extrahieren
+      // Try to extract additional error information
       let details = null;
       if (err.cause) {
         details = err.cause.details || err.cause.error;
@@ -64,14 +64,14 @@ export default function KrakenBalance({ userId }) {
   }, []);
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat("de-DE", {
+    return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "EUR",
     }).format(value);
   };
 
   const formatBitcoin = (value) => {
-    return new Intl.NumberFormat("de-DE", {
+    return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 8,
       maximumFractionDigits: 8,
     }).format(value);
@@ -79,9 +79,9 @@ export default function KrakenBalance({ userId }) {
 
   const refreshBalance = () => {
     toast.promise(fetchBalance(), {
-      loading: "Kontostand wird aktualisiert...",
-      success: "Kontostand aktualisiert",
-      error: "Kontostand konnte nicht aktualisiert werden",
+      loading: "Updating balance...",
+      success: "Balance updated",
+      error: "Could not update balance",
     });
   };
 
@@ -91,7 +91,7 @@ export default function KrakenBalance({ userId }) {
         <div className="flex items-center">
           <span className="text-red-500 mr-2">⚠️</span>
           <h3 className="text-lg font-medium text-red-800">
-            Fehler beim Laden des Kontostands
+            Error Loading Balance
           </h3>
         </div>
         <p className="mt-2 text-sm text-red-700">{error}</p>
@@ -99,21 +99,15 @@ export default function KrakenBalance({ userId }) {
           <div className="mt-2">
             <p className="text-sm text-red-600">{errorDetails}</p>
             <div className="mt-3">
-              <p className="text-sm font-medium text-gray-700">Behebung:</p>
+              <p className="text-sm font-medium text-gray-700">Resolution:</p>
               <ul className="list-disc pl-5 text-sm text-gray-600">
-                <li>Stelle sicher, dass deine API-Keys korrekt sind</li>
+                <li>Make sure your API keys are correct</li>
+                <li>Check if your API key has the "Query funds" permission</li>
                 <li>
-                  Überprüfe, ob dein API-Key die Berechtigung &quot;Query
-                  funds&quot; besitzt
+                  If you just created the keys, wait a few minutes for them to
+                  become active
                 </li>
-                <li>
-                  Falls du die Keys gerade erstellt hast, warte einige Minuten,
-                  bis sie aktiv sind
-                </li>
-                <li>
-                  Falls das Problem weiterhin besteht, versuche neue API-Keys zu
-                  erstellen
-                </li>
+                <li>If the problem persists, try creating new API keys</li>
               </ul>
             </div>
             <div className="mt-3">
@@ -121,7 +115,7 @@ export default function KrakenBalance({ userId }) {
                 onClick={refreshBalance}
                 className="text-sm px-3 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
               >
-                Erneut versuchen
+                Try Again
               </button>
             </div>
           </div>
@@ -159,8 +153,8 @@ export default function KrakenBalance({ userId }) {
               />
             </svg>
             <p>
-              <strong>Hinweis:</strong> Es werden Test-Daten angezeigt, da keine
-              Verbindung zur Kraken-API hergestellt werden konnte.
+              <strong>Note:</strong> Test data is being displayed as no
+              connection to the Kraken API could be established.
             </p>
           </div>
           {errorDetails && (
@@ -171,7 +165,7 @@ export default function KrakenBalance({ userId }) {
 
       {loading ? (
         <div className="flex justify-center items-center h-32">
-          <div className="text-gray-400">Laden...</div>
+          <div className="text-gray-400">Loading...</div>
         </div>
       ) : balanceData ? (
         <div className="space-y-6">
@@ -224,7 +218,7 @@ export default function KrakenBalance({ userId }) {
         </div>
       ) : (
         <div className="text-center py-6">
-          <p className="text-gray-500">Keine Daten verfügbar</p>
+          <p className="text-gray-500">No data available</p>
         </div>
       )}
     </div>

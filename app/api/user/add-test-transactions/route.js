@@ -132,7 +132,7 @@ export async function POST(req) {
       .insertMany(testTransactions);
 
     return NextResponse.json({
-      message: `${result.insertedCount} Testdaten erfolgreich hinzugefügt`,
+      message: `${result.insertedCount} testdata successfully inserted`,
       insertedIds: result.insertedIds,
       userId: userId.toString(),
     });

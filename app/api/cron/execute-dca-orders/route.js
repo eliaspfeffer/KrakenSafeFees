@@ -3,6 +3,8 @@ import { decryptData } from "@/lib/encryption";
 import { buyBitcoin } from "@/lib/krakenApi";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/libs/next-auth";
 // Das Mongoose-Model wird nicht direkt importiert, weil wir direkt mit MongoDB arbeiten
 // import Transaction from "@/models/Transaction";
 
@@ -50,8 +52,101 @@ function calculateActualFee(amount) {
  * API-Route zum Ausführen anstehender DCA-Aufträge (POST-Methode)
  * Diese Route wird von einem Vercel Cron Job alle 10 Minuten aufgerufen
  */
-export async function POST(req) {
-  return await executeDCAOrders(req);
+export async function POST() {
+  try {
+    // Check if user is authenticated
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    // Get user's DCA settings
+    const user = await connectToDB()
+      .collection("users")
+      .findOne({
+        _id: session.user.id,
+        select: {
+          krakenApiKey: true,
+          krakenApiSecret: true,
+          dcaEnabled: true,
+          dcaAmount: true,
+          dcaInterval: true,
+          dcaLastExecution: true,
+        },
+      });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (!user.dcaEnabled) {
+      return NextResponse.json(
+        { message: "DCA is not enabled for this user" },
+        { status: 200 }
+      );
+    }
+
+    // Check if enough time has passed since last execution
+    const now = new Date();
+    const lastExecution = user.dcaLastExecution
+      ? new Date(user.dcaLastExecution)
+      : null;
+    const intervalMs = user.dcaInterval * 60 * 60 * 1000; // Convert hours to milliseconds
+
+    if (lastExecution && now - lastExecution < intervalMs) {
+      return NextResponse.json(
+        {
+          message: "Not enough time has passed since last execution",
+          nextExecution: new Date(lastExecution.getTime() + intervalMs),
+        },
+        { status: 200 }
+      );
+    }
+
+    // Execute DCA order
+    console.log(
+      `Executing DCA order for user ${session.user.id} with amount ${user.dcaAmount} EUR`
+    );
+
+    const result = await buyBitcoin(
+      user.krakenApiKey,
+      user.krakenApiSecret,
+      user.dcaAmount,
+      true // Use minimum amount if necessary
+    );
+
+    if (!result.success) {
+      throw new Error(result.error || "Unknown error occurred during purchase");
+    }
+
+    // Update last execution time
+    await connectToDB()
+      .collection("users")
+      .updateOne({ _id: session.user.id }, { $set: { dcaLastExecution: now } });
+
+    // Create transaction record
+    await connectToDB()
+      .collection("transactions")
+      .insertOne({
+        userId: session.user.id,
+        type: "DCA",
+        amount: user.dcaAmount,
+        status: "completed",
+        details: JSON.stringify(result),
+      });
+
+    return NextResponse.json({
+      success: true,
+      message: "DCA order executed successfully",
+      result,
+    });
+  } catch (error) {
+    console.error("Error executing DCA order:", error);
+    return NextResponse.json(
+      { error: error.message || "Unknown error occurred" },
+      { status: 500 }
+    );
+  }
 }
 
 /**

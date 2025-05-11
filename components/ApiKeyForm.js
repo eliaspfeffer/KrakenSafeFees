@@ -38,7 +38,7 @@ export default function ApiKeyForm({ userId }) {
         throw new Error(error.message || "Ein Fehler ist aufgetreten");
       }
 
-      toast.success("API-Keys erfolgreich gespeichert!");
+      toast.success("successfully saved API-Keys!");
 
       // Refresh the page to show the updated UI
       router.refresh();
@@ -80,7 +80,7 @@ export default function ApiKeyForm({ userId }) {
         />
         <label className="label">
           <span className="label-text-alt text-warning">
-            Der Secret Key wird sicher verschlüsselt gespeichert
+            The Secret Key will be stored securely encrypted
           </span>
         </label>
       </div>
@@ -91,7 +91,7 @@ export default function ApiKeyForm({ userId }) {
           className={`btn btn-primary ${isLoading ? "loading" : ""}`}
           disabled={isLoading}
         >
-          {isLoading ? "Speichert..." : "API Keys speichern"}
+          {isLoading ? "Saving..." : "Save API Keys"}
         </button>
       </div>
     </form>
