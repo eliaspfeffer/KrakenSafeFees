@@ -10,6 +10,8 @@ import ResetApiKeyButton from "@/components/ResetApiKeyButton";
 import TransactionHistory from "@/components/TransactionHistory";
 import { ObjectId } from "mongodb";
 import ExecuteDcaTestButton from "@/components/ExecuteDcaTestButton";
+import KrakenImage from "@/app/krakenNeededPermissions.png";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -209,6 +211,19 @@ export default async function Dashboard() {
                 >
                   Go to Kraken API Settings
                 </a>
+
+                {/* Image showing required API permissions */}
+                <div className="my-4 ">
+                  <Image
+                    src={KrakenImage}
+                    alt="Product Demo"
+                    className="w-full hover:scale-105 transition-transform duration-300 rounded-lg"
+                    priority={true}
+                    width={500}
+                    height={500}
+                  />
+                </div>
+
                 <div className="alert alert-warning my-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
