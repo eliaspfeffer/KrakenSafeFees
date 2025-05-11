@@ -15,10 +15,9 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [minimumOrder, setMinimumOrder] = useState(null);
-  const [isLoadingMinimum, setIsLoadingMinimum] = useState(true);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
   const [euroBalance, setEuroBalance] = useState(0);
-  const [isLoadingBalance, setIsLoadingBalance] = useState(true);
   const router = useRouter();
 
   // Comparison values for change detection
@@ -30,7 +29,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
   useEffect(() => {
     async function fetchMinimumOrder() {
       try {
-        setIsLoadingMinimum(true);
+        setIsLoading(true);
         const response = await fetch("/api/user/minimum-order");
         if (response.ok) {
           const data = await response.json();
@@ -41,7 +40,7 @@ export default function DcaSettingsForm({ userId, initialSettings }) {
       } catch (error) {
         console.error("Error fetching minimum order value:", error);
       } finally {
-        setIsLoadingMinimum(false);
+        setIsLoading(false);
       }
     }
 

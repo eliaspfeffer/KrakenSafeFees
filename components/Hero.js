@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import TestimonialsAvatars from "./TestimonialsAvatars";
-import config from "@/config";
 import HeroImage from "@/app/heroImage.png";
 import { useRouter } from "next/navigation";
 

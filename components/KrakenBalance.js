@@ -102,7 +102,10 @@ export default function KrakenBalance({ userId }) {
               <p className="text-sm font-medium text-gray-700">Resolution:</p>
               <ul className="list-disc pl-5 text-sm text-gray-600">
                 <li>Make sure your API keys are correct</li>
-                <li>Check if your API key has the "Query funds" permission</li>
+                <li>
+                  Check if your API key has the &quot;Query funds&quot;
+                  permission
+                </li>
                 <li>
                   If you just created the keys, wait a few minutes for them to
                   become active
