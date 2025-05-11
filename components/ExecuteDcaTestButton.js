@@ -68,7 +68,7 @@ export default function ExecuteDcaTestButton({ userId }) {
         throw new Error(error.message || "An error occurred");
       }
 
-      await response.json();
+      const data = await response.json();
       toast.success("Next execution date set to now!");
 
       // Reload the page to display updated data

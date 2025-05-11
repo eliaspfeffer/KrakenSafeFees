@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMinimumBitcoinOrderForXBTEUR } from "@/lib/krakenApi";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/libs/next-auth";
 
 /**
  * GET-Handler für /api/user/minimum-order

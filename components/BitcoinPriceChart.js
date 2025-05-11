@@ -574,7 +574,7 @@ export default function BitcoinPriceChart({
               }
             />
             <Tooltip
-              formatter={(value, name) => {
+              formatter={(value, name, props) => {
                 // Preis formatieren
                 if (name.includes("Bitcoin-Preis")) {
                   return [`${Number(value).toLocaleString("de-DE")} €`, name];

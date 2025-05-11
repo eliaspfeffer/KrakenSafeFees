@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import {
   startLocalCronJobs,
   stopLocalCronJobs,
@@ -18,20 +18,6 @@ export default function LocalCronJobManager() {
 
   // Konfigurierte Intervalle aus Umgebungsvariablen lesen
   const cronInterval = parseInt(process.env.LOCAL_CRON_INTERVAL || "600000"); // Standard: 10 Minuten
-
-  // Update des nächsten Check-Zeitpunkts (für Debug-Anzeige)
-  const updateNextCheckTime = useCallback(() => {
-    const now = new Date();
-    // Verwende das konfigurierte Intervall
-    const nextInterval = isProduction
-      ? cronInterval
-      : parseInt(process.env.LOCAL_CRON_TEST_INTERVAL || "60000");
-    const next = new Date(now.getTime() + nextInterval);
-    setNextCheck(next);
-
-    // Recursive update every minute
-    setTimeout(updateNextCheckTime, 60 * 1000);
-  }, [isProduction, cronInterval]);
 
   // Prüfen, ob wir uns im Browser befinden, um Hydration-Fehler zu vermeiden
   useEffect(() => {
@@ -54,7 +40,21 @@ export default function LocalCronJobManager() {
       stopLocalCronJobs();
       setIsRunning(false);
     };
-  }, [isCronDisabled, isBrowser, updateNextCheckTime]);
+  }, [isCronDisabled, isBrowser]);
+
+  // Update des nächsten Check-Zeitpunkts (für Debug-Anzeige)
+  const updateNextCheckTime = () => {
+    const now = new Date();
+    // Verwende das konfigurierte Intervall
+    const nextInterval = isProduction
+      ? cronInterval
+      : parseInt(process.env.LOCAL_CRON_TEST_INTERVAL || "60000");
+    const next = new Date(now.getTime() + nextInterval);
+    setNextCheck(next);
+
+    // Recursive update every minute
+    setTimeout(updateNextCheckTime, 60 * 1000);
+  };
 
   // Manuelles Triggern des Cron-Jobs
   const handleManualTrigger = async () => {

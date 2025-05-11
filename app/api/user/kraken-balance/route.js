@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 
 // API-Route zum Abrufen des Kraken-Kontostands
-export async function GET() {
+export async function GET(req) {
   try {
     // Authentifizierung prüfen
     const session = await getServerSession(authOptions);

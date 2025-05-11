@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
  * GET /api/user/transactions
  * Ruft die Transaktionen des aktuellen Benutzers ab
  */
-export async function GET() {
+export async function GET(req) {
   try {
     // Authentifizierung prüfen
     const session = await getServerSession(authOptions);

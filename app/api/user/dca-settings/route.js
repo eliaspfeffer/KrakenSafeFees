@@ -147,7 +147,7 @@ export async function POST(req) {
 }
 
 // Endpoint zum Abrufen der DCA-Einstellungen
-export async function GET() {
+export async function GET(req) {
   try {
     // Authentifizierung prüfen
     const session = await getServerSession(authOptions);
