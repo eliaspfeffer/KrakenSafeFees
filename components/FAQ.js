@@ -16,6 +16,20 @@ const faqList = [
     ),
   },
   {
+    question: "Why not just use Binance instead?",
+    answer: (
+      <div className="space-y-2 leading-relaxed">
+        While Binance may appear to have lower trading fees initially, their
+        withdrawal fees to your own wallet are 3-5 times higher than on-chain
+        transaction costs. This effectively traps your funds on their platform
+        until you&apos;re willing to pay these excessive fees. When calculating
+        the total cost including withdrawals, Kraken with our platform is
+        actually more cost-effective for regular Bitcoin accumulation and
+        self-custody.
+      </div>
+    ),
+  },
+  {
     question: "How much can I save on fees?",
     answer: (
       <p>
