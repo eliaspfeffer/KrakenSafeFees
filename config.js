@@ -21,8 +21,8 @@ const config = {
         // REQUIRED — we use this to find the plan in the webhook (for instance if you want to update the user's credits based on the plan)
         priceId:
           process.env.NODE_ENV === "development"
-            ? "price_1Niyy5AxyNprDp7iZIqEyD2h"
-            : "price_456",
+            ? "price_1RNtI8GdczfWTe73P5qWncLL "
+            : "prod_SIUG4F695wE8jp",
         //  REQUIRED - Name of the plan, displayed on the pricing page
         name: "Starter",
         // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
@@ -46,8 +46,8 @@ const config = {
         isFeatured: true,
         priceId:
           process.env.NODE_ENV === "development"
-            ? "price_1O5KtcAxyNprDp7iftKnrrpw"
-            : "price_456",
+            ? "price_1RNtI8GdczfWTe73P5qWncLL"
+            : "prod_SIUG4F695wE8jp",
         name: "Pro",
         description: "Perfect for recurring Bitcoin investments above €500",
         price: 5,

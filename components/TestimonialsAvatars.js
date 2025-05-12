@@ -28,15 +28,11 @@ const fallbackAvatars = [
 ];
 
 const TestimonialsAvatars = ({ priority = false }) => {
-  const [usersData, setUsersData] = useState({
-    totalUsers: 32, // Standardwert, wird durch tatsächliche Zahl ersetzt
-    profileImages: fallbackAvatars,
-  });
+  const [usersData, setUsersData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Funktion zum Abrufen der Benutzerdaten
     const fetchUsersData = async () => {
       try {
         setLoading(true);
@@ -51,7 +47,6 @@ const TestimonialsAvatars = ({ priority = false }) => {
         if (data.success) {
           setUsersData({
             totalUsers: data.totalUsers,
-            // Wenn keine Benutzerbilder zurückgegeben werden, verwende die Fallback-Bilder
             profileImages:
               data.profileImages.length > 0
                 ? data.profileImages
@@ -63,11 +58,6 @@ const TestimonialsAvatars = ({ priority = false }) => {
       } catch (err) {
         console.error("Error fetching user data:", err);
         setError(true);
-        // Bei Fehler Fallback-Daten verwenden
-        setUsersData({
-          totalUsers: 32,
-          profileImages: fallbackAvatars,
-        });
       } finally {
         setLoading(false);
       }
@@ -76,13 +66,34 @@ const TestimonialsAvatars = ({ priority = false }) => {
     fetchUsersData();
   }, []);
 
-  // Maximal 5 Bilder anzeigen, um das Design konsistent zu halten
+  if (loading) {
+    return (
+      <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-3">
+        <div className="flex -space-x-5 avatar-group justify-start">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="avatar w-12 h-12">
+              <div className="w-12 h-12 rounded-full bg-base-300 animate-pulse" />
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <div className="w-24 h-5 bg-base-300 animate-pulse rounded mb-2" />
+          <div className="w-48 h-5 bg-base-300 animate-pulse rounded" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !usersData) {
+    return null;
+  }
+
+  // Maximal 5 Bilder anzeigen
   const displayAvatars = usersData.profileImages.slice(0, 5);
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-3">
-      {/* AVATARS */}
-      <div className={`-space-x-5 avatar-group justy-start`}>
+      <div className={`-space-x-5 avatar-group justify-start`}>
         {displayAvatars.map((image, i) => (
           <div className="avatar w-12 h-12" key={i}>
             <Image
@@ -96,8 +107,7 @@ const TestimonialsAvatars = ({ priority = false }) => {
         ))}
       </div>
 
-      {/* RATING */}
-      <div className="flex flex-col justify-center items-center md:items-start gap-1">
+      <div className="flex flex-col justify-center items-center">
         <div className="rating">
           {[...Array(5)].map((_, i) => (
             <svg
