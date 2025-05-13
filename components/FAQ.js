@@ -10,8 +10,8 @@ const faqList = [
     question: "Why should I use this platform over Kraken?",
     answer: (
       <div className="space-y-2 leading-relaxed">
-        Our platform offers up to 10x lower fees, automated BTC purchases, and
-        no hidden spreads, making it ideal for long-term Bitcoin accumulation.
+        Our platform offers 60% lower fees, automated BTC purchases, and no
+        hidden spreads, making it ideal for long-term Bitcoin accumulation.
       </div>
     ),
   },

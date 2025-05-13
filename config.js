@@ -24,42 +24,21 @@ const config = {
             ? "price_1RNtI8GdczfWTe73P5qWncLL "
             : "prod_SIUG4F695wE8jp",
         //  REQUIRED - Name of the plan, displayed on the pricing page
-        name: "Starter",
-        // A friendly description of the plan, displayed on the pricing page. Tip: explain why this plan and not others
-        description: "Perfect for monthly Bitcoin investments under €500",
+        name: "Free",
+        // A friendly description of the plan, displayed on the pricing page.
+        description: "Everything you need to start your Bitcoin investments",
         // The price you want to display, the one user will be charged on Stripe.
-        price: 1,
+        price: 0,
         // If you have an anchor price (i.e. $29) that you want to display crossed out, put it here. Otherwise, leave it empty
-        priceAnchor: 15,
+        priceAnchor: "",
         features: [
           {
-            name: "Save up to 70% on Kraken fees",
+            name: "Save on Kraken fees",
           },
-          { name: "Weekly automated DCA purchases" },
+          { name: "Automated DCA purchases" },
           { name: "Real-time market prices without spreads" },
           { name: "Secure API key management" },
-          { name: "First 3 months free" },
-        ],
-      },
-      {
-        // This plan will look different on the pricing page, it will be highlighted. You can only have one plan with isFeatured: true
-        isFeatured: true,
-        priceId:
-          process.env.NODE_ENV === "development"
-            ? "price_1RNtI8GdczfWTe73P5qWncLL"
-            : "prod_SIUG4F695wE8jp",
-        name: "Pro",
-        description: "Perfect for recurring Bitcoin investments above €500",
-        price: 5,
-        priceAnchor: 25,
-        features: [
-          { name: "Save up to 70% on Kraken fees" },
-          { name: "Daily, weekly or custom DCA intervals" },
-          { name: "Customizable Spend-Everything-Until Date" },
-          { name: "Real-time market prices without spreads" },
-          { name: "Enhanced security with time/volume limits" },
-          { name: "Fee savings dashboard and analytics" },
-          { name: "Priority support" },
+          { name: "Complete access to all features" },
         ],
       },
     ],
