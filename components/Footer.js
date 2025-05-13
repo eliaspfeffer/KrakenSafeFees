@@ -77,7 +77,7 @@ const Footer = () => {
                     className="link link-hover"
                     aria-label="Contact Support"
                   >
-                    Support
+                    Support / Contact
                   </a>
                 )}
                 <Link href="/#pricing" className="link link-hover">
@@ -103,6 +103,9 @@ const Footer = () => {
                 </Link>
                 <Link href="/privacy-policy" className="link link-hover">
                   Privacy policy
+                </Link>
+                <Link href="/impressum" className="link link-hover">
+                  Legal Notice
                 </Link>
               </div>
             </div>

@@ -14,7 +14,7 @@ import config from "@/config";
 // I need your help to write a simple Terms & Services for my website. Here is some context:
 // - Website: https://shipfa.st
 // - Name: ShipFast
-// - Contact information: marc@shipfa.st
+// - Contact information: eliaspfeffer@gmail.com
 // - Description: A JavaScript code boilerplate to help entrepreneurs launch their startups faster
 // - Ownership: when buying a package, users can download code to create apps. They own the code but they do not have the right to resell it. They can ask for a full refund within 7 day after the purchase.
 // - User data collected: name, email and payment information
@@ -31,6 +31,13 @@ export const metadata = getSEOTags({
 });
 
 const TOS = () => {
+  // Get current date formatted for the Terms of Service
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <main className="max-w-xl mx-auto">
       <div className="p-5">
@@ -57,11 +64,7 @@ const TOS = () => {
           className="leading-relaxed whitespace-pre-wrap"
           style={{ fontFamily: "sans-serif" }}
         >
-          {`Last Updated: ${new Date().toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
+          {`Last Updated: ${currentDate}
 
 TERMS AND CONDITIONS FOR SAVEKRAKENFEES
 
@@ -111,6 +114,8 @@ TO THE MAXIMUM EXTENT PERMITTED BY LAW, SAVEKRAKENFEES IS PROVIDED "AS IS" AND "
 
 5.2 DATA COLLECTION: We collect and store user data, including name, email, and, if applicable, payment information, as well as API keys with your explicit consent.
 
+5.3 MARKETING COMMUNICATIONS: By using our services, you agree that we may use your email address to contact you regarding future Bitcoin-related projects and services that may be of interest to you. You can opt out of these communications at any time by contacting us or using the unsubscribe link in our emails.
+
 6. FEES AND PAYMENTS
 
 6.1 TRANSPARENT FEES: We charge a service fee for the use of our Platform as indicated on our website. This fee is in addition to any fees charged by Kraken or other third parties.
@@ -131,9 +136,7 @@ If any provision of these Terms is found to be invalid or unenforceable, the rem
 
 BY USING OUR SERVICES, YOU ACKNOWLEDGE THAT YOU HAVE READ AND UNDERSTOOD THESE TERMS AND AGREE TO BE BOUND BY THEM.
 
-For any questions regarding these Terms of Service, please contact us at ${
-            config.resend.supportEmail
-          }.`}
+For any questions regarding these Terms of Service, please contact us at ${config.resend.supportEmail}.`}
         </pre>
       </div>
     </main>

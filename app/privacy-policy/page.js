@@ -21,7 +21,7 @@ import config from "@/config";
 // - Data sharing: we do not share the data with any other parties
 // - Children's Privacy: we do not collect any data from children
 // - Updates to the Privacy Policy: users will be updated by email
-// - Contact information: marc@shipfa.st
+// - Contact information: eliaspfeffer@gmail.com
 
 // Please write a simple privacy policy for my site. Add the current date.  Do not add or explain your reasoning. Answer:
 
@@ -71,7 +71,7 @@ We collect the following personal information from you:
 
 Name: We collect your name to personalize your experience and communicate with you effectively.
 Email: We collect your email address to send you important information regarding your orders, updates, and communication.
-Payment Information: We collect payment details to process your orders securely. However, we do not store your payment information on our servers. Payments are processed by trusted third-party payment processors.
+Payment Information: We collect payment details to process your orders securely. However, we do store the historical payment data which got processed via our service to add up the costs you have saved but we do not store any historical payment data of your account which didnt got started via our service. The sole purpose of the stored data is to show you the costs you have saved over time. We do not sell or share this data with any third parties.
 
 1.2 Non-Personal Data
 
@@ -79,7 +79,7 @@ We may use web cookies and similar technologies to collect non-personal informat
 
 2. Purpose of Data Collection
 
-We collect and use your personal data for the sole purpose of order processing. This includes processing your orders, sending order confirmations, providing customer support, and keeping you updated about the status of your orders.
+We collect and use your personal data for the sole purpose of order processing. This includes processing your orders, sending order confirmations, providing customer support, and keeping you updated about the status of your orders. We do not want to sell your data as this is not how we want to run our business or make money.
 
 3. Data Sharing
 
@@ -87,7 +87,7 @@ We do not share your personal data with any third parties except as required for
 
 4. Children's Privacy
 
-ShipFast is not intended for children under the age of 13. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us at the email address provided below.
+SaveKrakenFees is not intended for children under the age of 13. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us at the email address provided below.
 
 5. Updates to the Privacy Policy
 
@@ -97,7 +97,7 @@ We may update this Privacy Policy from time to time to reflect changes in our pr
 
 If you have any questions, concerns, or requests related to this Privacy Policy, you can contact us at:
 
-Email: marc@shipfa.st
+Email: eliaspfeffer@gmail.com
 
 For all other inquiries, please visit our Contact Us page on the Website.
 

@@ -5,13 +5,21 @@ import TestimonialsAvatars from "./TestimonialsAvatars";
 import config from "@/config";
 import HeroImage from "@/app/heroImage.png";
 import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
 
 const Hero = () => {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
-  // Gemeinsame Funktion für Button und Bild-Klick
+  // Function to handle button and image click - checks auth status before redirecting
   const handleSaveFeesClick = () => {
-    router.push("/dashboard");
+    if (status === "authenticated") {
+      // If user is already logged in, redirect directly to dashboard
+      router.push("/dashboard");
+    } else {
+      // If not authenticated, redirect to sign in with callback to dashboard
+      signIn(undefined, { callbackUrl: config.auth.callbackUrl });
+    }
   };
 
   return (
