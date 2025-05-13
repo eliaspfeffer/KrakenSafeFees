@@ -4,7 +4,8 @@
 # ohne dass das Terminal geöffnet bleiben muss
 
 # Konfigurationsoptionen
-PROJECT_DIR="$HOME/Dokumente/Github/krakensafefees"
+#PROJECT_DIR="$HOME/Dokumente/Github/krakensafefees"
+PROJECT_DIR="$HOME/Documents/Github/krakensafefees"
 LOG_FILE="$PROJECT_DIR/dev-server.log"
 PID_FILE="$PROJECT_DIR/.dev-server.pid"
 CPU_PRIORITY=10

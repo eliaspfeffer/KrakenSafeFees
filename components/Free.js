@@ -21,8 +21,9 @@ const Free = () => {
             working on.
           </p>
           <p className="text-base-content/80 mt-2">
-            In the future, we plan to introduce modest pricing between $1 and
-            $5, but until then you can enjoy all features at no cost.
+            In the future, we plan to introduce modest pricing (lifetime access)
+            between $1 and $5, but until then you can enjoy all features at no
+            cost.
           </p>
         </div>
 

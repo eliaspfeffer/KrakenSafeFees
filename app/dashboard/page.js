@@ -12,6 +12,7 @@ import { ObjectId } from "mongodb";
 import ExecuteDcaTestButton from "@/components/ExecuteDcaTestButton";
 import KrakenImage from "@/app/krakenNeededPermissions.png";
 import Image from "next/image";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,9 @@ export default async function Dashboard() {
   }
 
   console.log("Dashboard - Session User:", session.user);
+
+  // Prüfen, ob der Benutzer der Admin ist
+  const isAdmin = session.user.email === "eliaspfeffer@googlemail.com";
 
   // Get the user's API keys from the database if they exist
   const db = await connectToDB();
@@ -80,7 +84,14 @@ export default async function Dashboard() {
       <section className="max-w-3xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl md:text-4xl font-extrabold">Dashboard</h1>
-          <ButtonAccount />
+          <div className="flex items-center gap-4">
+            {isAdmin && (
+              <Link href="/admin" className="btn btn-sm btn-primary">
+                Admin-Bereich
+              </Link>
+            )}
+            <ButtonAccount />
+          </div>
         </div>
 
         {hasApiKeys && <KrakenBalance userId={userIdStr} />}
