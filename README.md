@@ -9,7 +9,7 @@ Hey maker 👋 it's Marc from [ShipFast](https://shipfa.st/docs). Let's get your
      ./krakensafefees.sh start
      ./krakensafefees.sh status
 
-### Die letzten Log-Einträge ansehen:
+### View the latest log entries:
 
      tail -f ~/Documents/Github/krakensafefees/dev-server.log
 
@@ -26,21 +26,96 @@ Hey maker 👋 it's Marc from [ShipFast](https://shipfa.st/docs). Let's get your
 
 ## Kraken API Integration
 
-Dieses Projekt enthält eine Implementierung zur Anzeige des Kraken-Kontostands im Dashboard. Die Integration ermöglicht es Nutzern, nach Hinterlegung ihrer Kraken API-Keys, ihre Bitcoin- und Euro-Guthaben im Dashboard anzuzeigen.
+This project contains an implementation for displaying the Kraken account balance in the dashboard. The integration allows users, after storing their Kraken API keys, to view their Bitcoin and Euro balances in the dashboard.
 
-### Funktionen
+### Features
 
-- Anzeige von Euro-Guthaben
-- Anzeige von Bitcoin-Guthaben (in BTC und EUR)
-- Anzeige des aktuellen Bitcoin-Kurses
-- Berechnung des Gesamtwerts des Portfolios
-- Sichere Speicherung und Verwendung der API-Keys
-- Fallback-Modus für die Entwicklung
+- Display of Euro balance
+- Display of Bitcoin balance (in BTC and EUR)
+- Display of the current Bitcoin price
+- Calculation of the total portfolio value
+- Secure storage and use of API keys
+- Fallback mode for development
 
-### Detaillierte Dokumentation
+### Detailed Documentation
 
-Eine ausführliche Dokumentation der Kraken API Integration finden Sie hier:
-[Kraken API Integration Dokumentation](./docs/KRAKEN_API_INTEGRATION.md)
+You can find detailed documentation of the Kraken API integration here:
+[Kraken API Integration Documentation](./docs/KRAKEN_API_INTEGRATION.md)
+
+## Installation and Configuration
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- MongoDB database
+- Kraken account with API keys
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/krakensafefees.git
+   cd krakensafefees
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+
+   - Copy the example environment file: `cp .env.template .env.local`
+   - Edit the `.env.local` file and add your own values:
+
+   ```
+   # Auth
+   NEXTAUTH_SECRET=your-nextauth-secret-key-here
+   NEXTAUTH_URL=http://localhost:3000
+
+   # MongoDB
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database
+
+   # Encryption key (MUST be exactly 32 bytes long)
+   ENCRYPTION_KEY=your-32-byte-encryption-key-here12
+
+   # Cron Jobs
+   CRON_SECRET=your-cron-secret-here
+
+   # Admin Configuration
+   ADMIN_EMAIL=your-admin-email@example.com
+   ```
+
+   > **IMPORTANT:** The ENCRYPTION_KEY must be exactly 32 bytes long, as it is used for AES-256 encryption of the Kraken API keys.
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+5. For production builds:
+   ```bash
+   npm run build
+   npm start
+   ```
+
+### Security Notes
+
+- Generate a strong, random `ENCRYPTION_KEY` that is exactly 32 bytes long
+- Never store real API keys directly in the code or in version-controlled files
+- For Kraken API keys, only use the necessary permissions (Query funds, Trading)
+- A `.gitignore` is configured to exclude `.env.local` and other sensitive files
+
+## Contributions
+
+Contributions are welcome! Please read `CONTRIBUTING.md` for more details.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Links
 

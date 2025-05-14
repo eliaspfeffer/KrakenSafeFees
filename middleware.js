@@ -10,7 +10,7 @@ export async function middleware(request) {
     });
 
     // Wenn der Benutzer nicht angemeldet ist oder nicht der Admin ist, leite zum Dashboard um
-    if (!token || token.email !== "eliaspfeffer@googlemail.com") {
+    if (!token || token.email !== process.env.ADMIN_EMAIL) {
       const url = new URL("/dashboard", request.url);
       return NextResponse.redirect(url);
     }
